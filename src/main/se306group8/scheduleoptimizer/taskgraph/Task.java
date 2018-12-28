@@ -1,158 +1,34 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
-/**
- * Represents a single task in a task graph, with a weight, name and dependencies.
- */
-public final class Task implements GraphEquality<Task> {
-	private final String name;
-	private List<Dependency> children;
-	private List<Dependency> parents;
-	private final int cost;
-	private int id;
-	private boolean[] isParent;
-	private boolean[] isChild;
-	private boolean isIndependant = true;
+public interface Task {
 	
-	Task(String name, int cost){
-		this.name = name;
-		this.cost = cost;
-	}
+	public String getName();
 	
-	// Used to create the topological ordering required by the ids.
-	void setId(int id) {
-		this.id = id;
-	}
+	public int getComputeCost();
 	
-	void setChildDependencies(Collection<Dependency> children){
-		if(children.size() != 0) {
-			isIndependant = false;
-		}
+	public int getID();
+	public int getMask();
+	
+	public int getParentTaskMask();
+	public int getChildTaskMask();
+	
+	//Not sure if there is any reason this is a list over a Collection we will see
+	public List<Task> getParentTasks();
+	public List<Task> getChildTasks();
+	
+	public TaskGraph getTaskGraph();
+	
+	default public boolean isChild(Task childCanditate) {
 		
-		this.children = new ArrayList<>(children);
-		
-		int largestChild = 0;
-		for(Dependency dep : children) {
-			largestChild = Math.max(largestChild, dep.getTarget().getId());
-		}
-		
-		isChild = new boolean[largestChild + 1];
-		
-		for(Dependency dep : children) {
-			isChild[dep.getTarget().getId()] = true;
-		}
+		//bitwise and
+		return (getChildTaskMask() & childCanditate.getMask()) != 0;
 	}
 	
-	void setParentDependencies(Collection<Dependency> parents){
-		if(parents.size() != 0) {
-			isIndependant = false;
-		}
+	default public boolean isParent(Task parentCanditate) {
 		
-		this.parents = new ArrayList<>(parents);
-		
-		int largestParent = 0;
-		for(Dependency dep : parents) {
-			largestParent = Math.max(largestParent, dep.getSource().getId());
-		}
-		
-		isParent = new boolean[largestParent + 1];
-		
-		for(Dependency dep : parents) {
-			isParent[dep.getSource().getId()] = true;
-		}
-	}
-	
-	/** 
-	 * Returns the name of this task. 
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public String toString() {
-		return name;
-	}
-	
-	public int getId() {
-		return id;
-	}
-	
-	/** 
-	 * Returns all of the tasks that depend on this task. 
-	 */
-	public List<Dependency> getChildren() {
-		return children;
-	}
-	
-	/** 
-	 * Returns all of the tasks that this task depends on. 
-	 */
-	public List<Dependency> getParents() {
-		return parents;
-	}
-	
-	/** 
-	 * Returns the time units this task requires. 
-	 */
-	public int getCost() {
-		return cost;
-	}
-	
-	@Override
-	public boolean equalsIgnoringParents(Task other) {
-		if(other == this)
-			return true;
-		
-		return other.name.equals(name) && other.cost == cost && GraphEqualityUtils.setsEqualIgnoringParents(children, other.children);
-	}
-
-	@Override
-	public boolean equalsIgnoringChildren(Task other) {
-		if(other == this)
-			return true;
-		
-		return other.name.equals(name) && other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
-	}
-	
-	public boolean isForkJoinCandidate() {
-		return parents.size() <= 1 && children.size() <= 1;
-	}
-	
-	public boolean isIndependant() {
-		return isIndependant;
-	}
-	
-	@Override
-	public boolean equals(Object other) {
-		if(other == this)
-			return true;
-		
-		if(!(other instanceof Task)) {
-			return false;
-		}
-		
-		Task task = (Task) other;
-		
-		// TODO is this really equality? - Name should be unique, so do we need these other checks?
-		
-		return task.name.equals(name) && cost == task.cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, task.parents) && GraphEqualityUtils.setsEqualIgnoringParents(children, task.children);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(cost, name, children.size(), parents.size());
-	}
-
-	public boolean isChild(Task task) {
-		return task.getId() >= isChild.length ? false : isChild[task.getId()];
-	}
-	
-	public boolean isParent(Task task) {
-		return task.getId() >= isParent.length ? false : isParent[task.getId()];
+		//bitwise and
+		return (getParentTaskMask() & parentCanditate.getMask()) != 0;
 	}
 }

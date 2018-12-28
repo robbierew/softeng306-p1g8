@@ -5,9 +5,9 @@ import java.util.List;
 
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
+import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 
 /**
  * This child finder attempts to remove all duplicate children and equivalent children, so that only one of each equivalence class is explored.
@@ -34,7 +34,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		int largestRoot = schedule.getLargestRoot();
 		
 		if(schedule.isFixed()) {
-			Task nextTaskInFixedOrder = schedule.getAllocatable().get(0);
+			TaskOld nextTaskInFixedOrder = schedule.getAllocatable().get(0);
 			
 			for(int p = 1; p <= schedule.getNumberOfUsedProcessors(); p++) {
 				if(checkFixedOrder(nextTaskInFixedOrder, p, schedule)) {
@@ -43,7 +43,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 			}
 			
 			if(schedule.getNumberOfUsedProcessors() != processors) { //We can always allocate on the next empty processor, regardless of fixed order.
-				for (Task task : schedule.getAllocatable()) {
+				for (TaskOld task : schedule.getAllocatable()) {
 					if(task.getId() > largestRoot) {
 						//No need to check, we are on a free processor anyway
 						childrenSchedules.add(new TreeSchedule(task, schedule.getNumberOfUsedProcessors() + 1, schedule));
@@ -51,7 +51,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 				}
 			}
 		} else {
-			for (Task task : schedule.getAllocatable()) {
+			for (TaskOld task : schedule.getAllocatable()) {
 				//Make sure that the processors are allocated in the order of the first task on each processor.
 				int processorsToAllocate;
 				if(task.getId() > schedule.getLargestRoot()) {
@@ -72,7 +72,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 	}
 	
 	/** As fixing the global order is dependent on many conditions. We also enforce local ordering of the tasks. */
-	private boolean checkFixedOrder(Task task, int processor, TreeSchedule schedule) {
+	private boolean checkFixedOrder(TaskOld task, int processor, TreeSchedule schedule) {
 		ProcessorAllocation alloc = schedule.getLastAllocationForProcessor(processor);
 		
 		if(alloc == null)
@@ -82,7 +82,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 	}
 	
 	/** Computes whether a should be BEFORE, AFTER or UNSURE b */
-	private ForkJoinOrderResult computeOrder(Task a, Task b, TreeSchedule schedule) {
+	private ForkJoinOrderResult computeOrder(TaskOld a, TaskOld b, TreeSchedule schedule) {
 		if(b.isParent(a)) {
 			return ForkJoinOrderResult.BEFORE;
 		}
@@ -91,11 +91,11 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 			return ForkJoinOrderResult.UNSURE;
 		}
 		
-		Dependency aChild = getChild(a);
-		Dependency bChild = getChild(b);
+		DependencyOld aChild = getChild(a);
+		DependencyOld bChild = getChild(b);
 		
-		Dependency aParent = getParent(a);
-		Dependency bParent = getParent(b);
+		DependencyOld aParent = getParent(a);
+		DependencyOld bParent = getParent(b);
 		
 		ForkJoinOrderResult idOrder = a.getId() < b.getId() ? ForkJoinOrderResult.BEFORE : ForkJoinOrderResult.AFTER;
 		
@@ -211,7 +211,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 	}*/
 	
 	//Ensures that the parent schedule is the earliest schedule that can produce this child. This is our stateless duplicate removal.
-	private boolean isBestParent(Task task, int processor, TreeSchedule schedule) {
+	private boolean isBestParent(TaskOld task, int processor, TreeSchedule schedule) {
 		//Look at each task on the top of the processor, if it is a later task then the schedule is not valid, provided removing it leaves a valid schedule.
 		for(int p = 1; p <= schedule.getNumberOfUsedProcessors(); p++) {
 			if(p != processor) {
@@ -238,7 +238,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 	}
 	
 	/** Returns null if there is no child */
-	private Dependency getChild(Task task) {
+	private DependencyOld getChild(TaskOld task) {
 		assert task.isForkJoinCandidate();
 		
 		if(task.getChildren().size() == 0) {
@@ -248,7 +248,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		return task.getChildren().get(0);
 	}
 	
-	private Dependency getParent(Task task) {
+	private DependencyOld getParent(TaskOld task) {
 		assert task.isForkJoinCandidate();
 		
 		if(task.getParents().size() == 0) {
@@ -259,7 +259,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 	}
 	
 	/** Returns -1 if the dependency is null */
-	private int childCommunicationCost(Dependency dep) {
+	private int childCommunicationCost(DependencyOld dep) {
 		if(dep == null)
 			return -1;
 		
@@ -267,7 +267,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 	}
 	
 	/** Returns -1 if the dependency is null. Else returns the time that the data produced by this parent is ready for the child. */
-	private int dataReadyTime(Dependency dep, TreeSchedule schedule) {
+	private int dataReadyTime(DependencyOld dep, TreeSchedule schedule) {
 		if(dep == null)
 			return -1;
 		

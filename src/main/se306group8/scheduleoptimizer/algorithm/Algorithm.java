@@ -1,7 +1,7 @@
 package se306group8.scheduleoptimizer.algorithm;
 
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 /**
  * The root class for all algorithms for computing a schedule.
@@ -32,7 +32,7 @@ public abstract class Algorithm {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	public abstract Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException;
+	public abstract Schedule produceCompleteScheduleHook(TaskGraphOld graph, int numberOfProcessors) throws InterruptedException;
 
 	/**
 	 * Starts the computation process for computing a valid complete schedule, returning when the computation is complete.
@@ -41,7 +41,7 @@ public abstract class Algorithm {
 	 * @param numberOfProcessors The maximum number of processors that the algorithm can assign tasks to, must be positive.
 	 * @return The complete schedule.
 	 */
-	public final Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+	public final Schedule produceCompleteSchedule(TaskGraphOld graph, int numberOfProcessors) throws InterruptedException {
 		
 		if(runtimeMonitor != null) {
 			runtimeMonitor.start(toString(), graph.getName(), numberOfProcessors, getNumberOfCores());

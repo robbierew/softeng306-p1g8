@@ -8,11 +8,11 @@ import java.util.ListIterator;
  * 
  * This is the result object that is returned from the algorithm.
  */
-public interface Schedule extends Iterable<List<Task>> {
+public interface Schedule extends Iterable<List<TaskOld>> {
 	/** 
 	 * Returns the task graph that this schedule was generated from. 
 	 */
-	public TaskGraph getGraph();
+	public TaskGraphOld getGraph();
 	
 	/** 
 	 * Returns the number of processors that were used by the schedule. 
@@ -24,10 +24,10 @@ public interface Schedule extends Iterable<List<Task>> {
 	 * 
 	 * If an unused processor is queried an empty list will be returned.
 	 */
-	public List<Task> getTasksOnProcessor(int processor);
+	public List<TaskOld> getTasksOnProcessor(int processor);
 
 	@Override
-	public ListIterator<List<Task>> iterator();
+	public ListIterator<List<TaskOld>> iterator();
 	
 	/**
 	 * Computes the start time of a particular task.
@@ -35,7 +35,7 @@ public interface Schedule extends Iterable<List<Task>> {
 	 * @param task The task to query for. This task must be one of the tasks included in the graph and schedule
 	 * @return The start time of the given task.
 	 */
-	public int getStartTime(Task task);
+	public int getStartTime(TaskOld task);
 	
 	/**
 	 * Queries the processor number that a particular task was assigned to.
@@ -43,7 +43,7 @@ public interface Schedule extends Iterable<List<Task>> {
 	 * @param task The task to query. This task must be one of the tasks in the task graph.
 	 * @return The processor number.
 	 */
-	public int getProcessorNumber(Task task);
+	public int getProcessorNumber(TaskOld task);
 	
 	/** 
 	 * Returns the total runtime of this schedule. 

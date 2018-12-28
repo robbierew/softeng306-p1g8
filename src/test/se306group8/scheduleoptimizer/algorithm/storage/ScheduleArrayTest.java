@@ -6,14 +6,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class ScheduleArrayTest {
 	private BlockScheduleArray array;
-	private TaskGraph graph;
-	private Task task;
+	private TaskGraphOld graph;
+	private TaskOld task;
 	private TreeSchedule parent;
 	private TreeSchedule child1;
 	private TreeSchedule child2;

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.BitSet;
 
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 
 /** A runtime monitor that outputs to the command line. */
 public class CLIRuntimeMonitor implements RuntimeMonitor {
@@ -53,7 +53,7 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	// Method that prints out final schedule to stdout
 	public void printSchedule(Schedule schedule, int maxLength) {
 		BitSet importantTimes = new BitSet();
-		for(Task t : schedule.getGraph().getAll()) {
+		for(TaskOld t : schedule.getGraph().getAll()) {
 			int startTime = schedule.getStartTime(t); //The time unit in which the first task occurs
 			int endTime = startTime + t.getCost(); //The time unit after the end of the task
 			
@@ -98,7 +98,7 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	private String taskOnProcessorAtTime(int time, int p, Schedule schedule) {
 		StringBuilder builder = new StringBuilder();
 		
-		for(Task task : schedule.getGraph().getAll()) {
+		for(TaskOld task : schedule.getGraph().getAll()) {
 			int startTime = schedule.getStartTime(task); //The time unit in which the first task occurs
 			int endTime = startTime + task.getCost(); //The time unit after the end of the task
 			

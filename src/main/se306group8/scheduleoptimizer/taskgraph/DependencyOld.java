@@ -5,22 +5,22 @@ import java.util.Objects;
 /**
  * Represents a data dependency between two tasks, and a communication cost.
  */
-public final class Dependency implements GraphEquality<Dependency> {
-	private final Task source;
-	private final Task target;
+public final class DependencyOld implements GraphEquality<DependencyOld> {
+	private final TaskOld source;
+	private final TaskOld target;
 	private final int communicationCost;
 	
-	Dependency(Task source, Task target, int communicationCost) {
+	DependencyOld(TaskOld source, TaskOld target, int communicationCost) {
 		this.source = source;
 		this.target = target;
 		this.communicationCost = communicationCost;
 	}
 	
-	public Task getTarget() {
+	public TaskOld getTarget() {
 		return target;
 	}
 	
-	public Task getSource() {
+	public TaskOld getSource() {
 		return source;
 	}
 	
@@ -35,7 +35,7 @@ public final class Dependency implements GraphEquality<Dependency> {
 
 	/** Checks the equality of this dependency ignoring any items involving the parents of this link. */
 	@Override
-	public boolean equalsIgnoringParents(Dependency other) {
+	public boolean equalsIgnoringParents(DependencyOld other) {
 		if(other == this)
 			return true;
 		
@@ -44,7 +44,7 @@ public final class Dependency implements GraphEquality<Dependency> {
 
 	/** Checks the equality of this dependency ignoring any items involving the children of this link. */
 	@Override
-	public boolean equalsIgnoringChildren(Dependency other) {
+	public boolean equalsIgnoringChildren(DependencyOld other) {
 		if(other == this)
 			return true;
 		
@@ -57,11 +57,11 @@ public final class Dependency implements GraphEquality<Dependency> {
 		if(other == this)
 			return true;
 		
-		if(!(other instanceof Dependency)) {
+		if(!(other instanceof DependencyOld)) {
 			return false;
 		}
 		
-		Dependency dep = (Dependency) other;
+		DependencyOld dep = (DependencyOld) other;
 		
 		return dep.communicationCost == communicationCost && dep.target.equalsIgnoringParents(target) && dep.source.equalsIgnoringChildren(source);
 	}

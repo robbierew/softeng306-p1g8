@@ -5,7 +5,7 @@ import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 /**
  * Non optimal greedy algorithm for task scheduling
@@ -21,7 +21,7 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 	}
 
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+	public Schedule produceCompleteScheduleHook(TaskGraphOld graph, int numberOfProcessors) throws InterruptedException {
 
 		getMonitor().logMessage("Starting Greedy.");
 

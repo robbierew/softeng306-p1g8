@@ -12,10 +12,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
+import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 /**
  * Represents an allocation of tasks to different processors in a specific order. 
@@ -25,9 +25,9 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  */
 public final class ListSchedule implements Schedule {
 	
-	private final TaskGraph graph;
-	private final List<List<Task>> taskLists;
-	private final Map<Task, ProcessorAllocation> allocations;
+	private final TaskGraphOld graph;
+	private final List<List<TaskOld>> taskLists;
+	private final Map<TaskOld, ProcessorAllocation> allocations;
 	
 	/**
 	 * Creates a schedule.
@@ -36,17 +36,17 @@ public final class ListSchedule implements Schedule {
 	 * @param taskLists The list of tasks that is assigned to each processor. Each task must be included in the graph, and each task must
 	 *        be used once and only once.
 	 */
-	public ListSchedule(TaskGraph graph, List<List<Task>> taskLists) {
+	public ListSchedule(TaskGraphOld graph, List<List<TaskOld>> taskLists) {
 		this(graph, new HashMap<>(), taskLists);
 	}
 
-	public ListSchedule(TaskGraph graph, Map<Task, ProcessorAllocation> allocation) {
+	public ListSchedule(TaskGraphOld graph, Map<TaskOld, ProcessorAllocation> allocation) {
 		this(graph, allocation, convertToLists(allocation));
 	}
 
-	private static List<List<Task>> convertToLists(Map<Task, ProcessorAllocation> allocation) {
-		List<List<Entry<Task, ProcessorAllocation>>> sortedLists = new ArrayList<>();
-		List<List<Task>> result = new ArrayList<>();
+	private static List<List<TaskOld>> convertToLists(Map<TaskOld, ProcessorAllocation> allocation) {
+		List<List<Entry<TaskOld, ProcessorAllocation>>> sortedLists = new ArrayList<>();
+		List<List<TaskOld>> result = new ArrayList<>();
 		
 		int maxProcessor = 0;
 		for(ProcessorAllocation value : allocation.values()) {
@@ -57,11 +57,11 @@ public final class ListSchedule implements Schedule {
 			sortedLists.add(new ArrayList<>());
 		}
 		
-		for(Entry<Task, ProcessorAllocation> entry : allocation.entrySet()) {
+		for(Entry<TaskOld, ProcessorAllocation> entry : allocation.entrySet()) {
 			sortedLists.get(entry.getValue().processor - 1).add(entry);
 		}
 		
-		for(List<Entry<Task, ProcessorAllocation>> list : sortedLists) {
+		for(List<Entry<TaskOld, ProcessorAllocation>> list : sortedLists) {
 			list.sort((a, b) -> a.getValue().startTime - b.getValue().startTime);
 			
 			result.add(list.stream()
@@ -72,7 +72,7 @@ public final class ListSchedule implements Schedule {
 		return result;
 	}
 
-	public ListSchedule(TaskGraph graph, Map<Task, ProcessorAllocation> allocation, List<List<Task>> taskLists) {
+	public ListSchedule(TaskGraphOld graph, Map<TaskOld, ProcessorAllocation> allocation, List<List<TaskOld>> taskLists) {
 		assert graph != null && taskLists != null && allocation != null && checkConsistency(graph, allocation, taskLists);
 		
 		this.graph = graph;
@@ -81,10 +81,10 @@ public final class ListSchedule implements Schedule {
 	}
 	
 	/** This method checks that all 3 arguments are consistent with each other in their representation. */
-	private static boolean checkConsistency(TaskGraph graph, Map<Task, ProcessorAllocation> allocation, List<List<Task>> taskLists) {
-		IdentityHashMap<Task, Object> identityHashSet = new IdentityHashMap<>();
+	private static boolean checkConsistency(TaskGraphOld graph, Map<TaskOld, ProcessorAllocation> allocation, List<List<TaskOld>> taskLists) {
+		IdentityHashMap<TaskOld, Object> identityHashSet = new IdentityHashMap<>();
 		Object value = new Object();
-		for(Task t : graph.getAll()) {
+		for(TaskOld t : graph.getAll()) {
 			identityHashSet.put(t, value);
 		}
 		
@@ -94,8 +94,8 @@ public final class ListSchedule implements Schedule {
 			return false;
 		}
 		
-		HashSet<Task> taskListTasks = new HashSet<>();
-		for(List<Task> list : taskLists) {
+		HashSet<TaskOld> taskListTasks = new HashSet<>();
+		for(List<TaskOld> list : taskLists) {
 			taskListTasks.addAll(list);
 		}
 		
@@ -113,7 +113,7 @@ public final class ListSchedule implements Schedule {
 	}
 
 	/** Computes the processor allocation of a task, assuming the the allocations of the parents have already been calculated. */
-	private ProcessorAllocation computeAllocation(Task task) {
+	private ProcessorAllocation computeAllocation(TaskOld task) {
 		ProcessorAllocation alloc = allocations.get(task);
 		
 		if(alloc != null) {
@@ -122,7 +122,7 @@ public final class ListSchedule implements Schedule {
 		
 		int processor = 1;
 		int index = -1;
-		for(List<Task> list : taskLists) {
+		for(List<TaskOld> list : taskLists) {
 			if((index = list.indexOf(task)) != -1) {
 				break;
 			}
@@ -138,10 +138,10 @@ public final class ListSchedule implements Schedule {
 			startTime = previousAllocation.endTime;
 		}
 		
-		for(Dependency dep : task.getParents()) {
+		for(DependencyOld dep : task.getParents()) {
 			int time;
 			
-			Task otherTask = dep.getSource();
+			TaskOld otherTask = dep.getSource();
 			ProcessorAllocation otherAlloc = computeAllocation(otherTask);
 			
 			if(processor != otherAlloc.processor) {
@@ -161,7 +161,7 @@ public final class ListSchedule implements Schedule {
 		return alloc;
 	}
 	
-	public TaskGraph getGraph() {
+	public TaskGraphOld getGraph() {
 		return graph;
 	}
 	
@@ -169,20 +169,20 @@ public final class ListSchedule implements Schedule {
 		return taskLists.size();
 	}
 	
-	public List<Task> getTasksOnProcessor(int processor) {
+	public List<TaskOld> getTasksOnProcessor(int processor) {
 		return taskLists.get(processor - 1);
 	}
 
 	@Override
-	public ListIterator<List<Task>> iterator() {
+	public ListIterator<List<TaskOld>> iterator() {
 		return taskLists.listIterator();
 	}
 	
-	public int getStartTime(Task task) {
+	public int getStartTime(TaskOld task) {
 		return computeAllocation(task).startTime;
 	}
 	
-	public int getProcessorNumber(Task task) {
+	public int getProcessorNumber(TaskOld task) {
 		return computeAllocation(task).processor;
 	}
 	
@@ -190,7 +190,7 @@ public final class ListSchedule implements Schedule {
 		//The maximum runtime is the last end time of a particular tasks.
 		
 		return taskLists.stream()				//Creates a stream of task Lists
-				.flatMap(List<Task>::stream)	//Creates a stream of streams of tasks
+				.flatMap(List<TaskOld>::stream)	//Creates a stream of streams of tasks
 				.map(this::computeAllocation)	//Map each task to the allocation object
 				.mapToInt(x -> x.endTime)		//Extracts the endTime from each allocation
 				.max()							//Gets the maximum endTime
@@ -221,14 +221,14 @@ public final class ListSchedule implements Schedule {
 		}
 		
 		for(int i = 1; i <= getNumberOfUsedProcessors(); i++) {
-			List<Task> listA = getTasksOnProcessor(i);
-			List<Task> listB = other.getTasksOnProcessor(i);
+			List<TaskOld> listA = getTasksOnProcessor(i);
+			List<TaskOld> listB = other.getTasksOnProcessor(i);
 			
 			if(listA.size() != listB.size())
 				return false;
 			
-			Iterator<Task> iterA = listA.iterator();
-			Iterator<Task> iterB = listB.iterator();
+			Iterator<TaskOld> iterA = listA.iterator();
+			Iterator<TaskOld> iterB = listB.iterator();
 			
 			for(; iterA.hasNext(); ) {
 				if(!iterA.next().getName().equals(iterB.next().getName())) {

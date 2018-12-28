@@ -14,7 +14,7 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class MinimumHeuristicTest {
@@ -28,7 +28,7 @@ public class MinimumHeuristicTest {
 	
 	/** Makes sure that the given heuristic is actually an underestimate. */
 	public void testEstimate(MinimumHeuristic heuristic) {
-		TaskGraph graph = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld graph = TestGraphUtils.buildTestGraphA();
 		
 		TreeSchedule root = new TreeSchedule(graph, heuristic, 2);
 		getCompleteList(root, heuristic);

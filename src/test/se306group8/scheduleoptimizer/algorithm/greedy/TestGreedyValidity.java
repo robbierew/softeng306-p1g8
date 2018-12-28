@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
-import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
+import se306group8.scheduleoptimizer.dotfile.DOTFileHandlerOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 public class TestGreedyValidity {
 	
@@ -34,13 +34,13 @@ public class TestGreedyValidity {
 		names.sort(null);
 		
 		for(String graphName : names) {
-			DOTFileHandler reader = new DOTFileHandler();
+			DOTFileHandlerOld reader = new DOTFileHandlerOld();
 			
 			long start = System.nanoTime();
 			
 			System.out.println("Starting '" + graphName + "'");
 			
-			TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+			TaskGraphOld graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
 			
 			Pattern pattern = Pattern.compile("^\\d+");
 			Matcher matcher = pattern.matcher(graphName);

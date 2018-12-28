@@ -13,16 +13,16 @@ class TaskTest {
 
 	@Test
 	void testIsNotIndependant() {
-		TaskGraph a = TestGraphUtils.buildTestGraphA();
-		for(Task t : a.getAll()) {
+		TaskGraphOld a = TestGraphUtils.buildTestGraphA();
+		for(TaskOld t : a.getAll()) {
 			assertFalse(t.isIndependant());
 		}
 	}
 	
 	@Test
 	void testIsIndependant() {
-		TaskGraph b = TestGraphUtils.buildTestGraphB();
-		for(Task t : b.getAll()) {
+		TaskGraphOld b = TestGraphUtils.buildTestGraphB();
+		for(TaskOld t : b.getAll()) {
 			assertTrue(t.isIndependant());
 		}
 	}

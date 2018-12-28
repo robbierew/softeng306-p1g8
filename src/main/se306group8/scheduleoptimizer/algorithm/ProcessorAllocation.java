@@ -2,7 +2,7 @@ package se306group8.scheduleoptimizer.algorithm;
 
 import java.util.Objects;
 
-import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 
 /** This class represents an allocation for a single task. It is used as an input to one of the constructors,
  * and is used internally within most of the algorithm systems. */
@@ -11,10 +11,10 @@ public final class ProcessorAllocation {
 	public final int processor;
 	public final int endTime;
 	
-	public final Task task;
+	public final TaskOld task;
 	public final ProcessorAllocation previousAlloc;
 	
-	public ProcessorAllocation(Task task, int startTime, int processor, ProcessorAllocation previous) {
+	public ProcessorAllocation(TaskOld task, int startTime, int processor, ProcessorAllocation previous) {
 		this.startTime = startTime;
 		this.endTime = startTime + task.getCost();
 		this.processor = processor;
@@ -22,7 +22,7 @@ public final class ProcessorAllocation {
 		this.previousAlloc = previous;
 	}
 
-	public ProcessorAllocation(Task task, int startTime, int processor) {
+	public ProcessorAllocation(TaskOld task, int startTime, int processor) {
 		this(task, startTime, processor, null);
 	}
 

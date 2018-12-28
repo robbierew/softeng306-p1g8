@@ -10,9 +10,9 @@ import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.cli.ArgsParser;
 import se306group8.scheduleoptimizer.config.ArgumentException;
 import se306group8.scheduleoptimizer.config.Config;
-import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
+import se306group8.scheduleoptimizer.dotfile.DOTFileHandlerOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.algorithm.CLIRuntimeMonitor;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 
@@ -48,9 +48,9 @@ public class Main {
 		
 		// Read in the task graph from the input file.
 		
-		DOTFileHandler fileHandler = new DOTFileHandler();
+		DOTFileHandlerOld fileHandler = new DOTFileHandlerOld();
 		
-		TaskGraph taskGraph;
+		TaskGraphOld taskGraph;
 		
 		try {
 			taskGraph = fileHandler.readTaskGraph(Paths.get(config.inputFile()));

@@ -2,14 +2,14 @@ package se306group8.scheduleoptimizer.algorithm.heuristic;
 
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 
 public class CriticalPathHeuristic implements MinimumHeuristic {
 	@Override
 	public int estimate(TreeSchedule schedule) {
 		if(schedule.isEmpty()) {
 			int max = 0;
-			for(Task root : schedule.getGraph().getRoots()) {
+			for(TaskOld root : schedule.getGraph().getRoots()) {
 				int bottomTime = schedule.getGraph().getBottomTime(root);
 				if(bottomTime > max) {
 					max = bottomTime;

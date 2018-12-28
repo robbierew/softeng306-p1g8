@@ -12,23 +12,23 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
+import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class TestScheduleUtils {
 	public static Schedule createTestScheduleA() {
-		TaskGraph graph = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld graph = TestGraphUtils.buildTestGraphA();
 		
 		//Topological Order
-		List<Task> tasks = new ArrayList<>(graph.getAll());
+		List<TaskOld> tasks = new ArrayList<>(graph.getAll());
 		tasks.sort((a, b) -> a.getName().compareTo(b.getName()));
 		
-		List<List<Task>> lists = new ArrayList<>();
+		List<List<TaskOld>> lists = new ArrayList<>();
 		
-		for(Task t : tasks) {
+		for(TaskOld t : tasks) {
 			lists.add(Arrays.asList(t));
 		}
 		
@@ -36,9 +36,9 @@ public class TestScheduleUtils {
 	}
 	
 	public static void checkValidity(Schedule schedule, int maxProcessors) {
-		TaskGraph graph = schedule.getGraph();
+		TaskGraphOld graph = schedule.getGraph();
 		
-		for(Task task : graph.getAll()) {
+		for(TaskOld task : graph.getAll()) {
 			int processorNumber = schedule.getProcessorNumber(task);
 			int index = schedule.getTasksOnProcessor(processorNumber).indexOf(task);
 			
@@ -53,13 +53,13 @@ public class TestScheduleUtils {
 			
 			int start;
 			if(index != 0) {
-				Task previous = schedule.getTasksOnProcessor(processorNumber).get(index - 1);
+				TaskOld previous = schedule.getTasksOnProcessor(processorNumber).get(index - 1);
 				start = schedule.getStartTime(previous) + previous.getCost();
 			} else {
 				start = 0;
 			}
 			
-			for(Dependency dep : task.getParents()) {
+			for(DependencyOld dep : task.getParents()) {
 				int comCost = (schedule.getProcessorNumber(task) == schedule.getProcessorNumber(dep.getSource())) ? 0 : dep.getCommunicationCost();
 				start = Math.max(start, comCost + dep.getSource().getCost() + schedule.getStartTime(dep.getSource()));
 			}
@@ -67,9 +67,9 @@ public class TestScheduleUtils {
 			assertEquals(start, schedule.getStartTime(task));
 		}
 		
-		Collection<Task> scheduledTasks = new HashSet<Task>();
+		Collection<TaskOld> scheduledTasks = new HashSet<TaskOld>();
 		for (int i = 1; i <= schedule.getNumberOfUsedProcessors(); i++) {
-			for (Task task : schedule.getTasksOnProcessor(i)) {
+			for (TaskOld task : schedule.getTasksOnProcessor(i)) {
 				if (scheduledTasks.contains(task)) {
 					fail();
 				}
@@ -78,7 +78,7 @@ public class TestScheduleUtils {
 		}
 		
 		// Equality ignores order of tasks
-		Collection<Task> allTasks = new HashSet<Task>(schedule.getGraph().getAll());
+		Collection<TaskOld> allTasks = new HashSet<TaskOld>(schedule.getGraph().getAll());
 		assertTrue(scheduledTasks.equals(allTasks));
 	}
 }

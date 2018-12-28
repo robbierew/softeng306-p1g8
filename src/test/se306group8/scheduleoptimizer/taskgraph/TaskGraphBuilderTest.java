@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 
 class TaskGraphBuilderTest {
 
-	private TaskGraph smallGraph;
+	private TaskGraphOld smallGraph;
 	
 	@BeforeEach
 	void createGraph() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		builder.addTask("a", 2)
 		       .addTask("b", 3)
 		       .addTask("c", 3)
@@ -30,8 +30,8 @@ class TaskGraphBuilderTest {
 	@Test
 	void testFourNodeTaskGraph() {
 			
-		Iterator<Task> rootNodes =  smallGraph.getRoots().iterator();
-		Task root = rootNodes.next();
+		Iterator<TaskOld> rootNodes =  smallGraph.getRoots().iterator();
+		TaskOld root = rootNodes.next();
 		
 		//Only one root node
 		assertFalse(rootNodes.hasNext());
@@ -39,13 +39,13 @@ class TaskGraphBuilderTest {
 		assertEquals(root.getName(), "a");
 		assertEquals(root.getCost(), 2);
 		
-		Collection<Dependency> rootChildren = root.getChildren();
+		Collection<DependencyOld> rootChildren = root.getChildren();
 		
 		//Two dependencies
 		assertEquals(rootChildren.size(), 2);
 		
-		Dependency dep = rootChildren.iterator().next();
-		Task sink = dep.getTarget().getChildren().iterator().next().getTarget();
+		DependencyOld dep = rootChildren.iterator().next();
+		TaskOld sink = dep.getTarget().getChildren().iterator().next().getTarget();
 		assertEquals(dep.getSource(), root);
 		assertEquals(sink.getName(),"d");
 		assertEquals(sink.getCost(),2);
@@ -54,14 +54,14 @@ class TaskGraphBuilderTest {
 	
 	@Test
 	void testTopologicalOrder() {
-		List<Task> topologicalOrder = smallGraph.getAll();
+		List<TaskOld> topologicalOrder = smallGraph.getAll();
 		
 		assertTrue(topologicalOrder.size() == 4);
 		
 		assertTrue(smallGraph.getRoots().contains(topologicalOrder.get(0)));
-		List<Task> secondLevel = topologicalOrder.subList(1, 3);
+		List<TaskOld> secondLevel = topologicalOrder.subList(1, 3);
 		
-		for (Dependency rootChildren:topologicalOrder.get(0).getChildren()) {
+		for (DependencyOld rootChildren:topologicalOrder.get(0).getChildren()) {
 			assertTrue(secondLevel.contains(rootChildren.getTarget()));
 		}
 		
@@ -72,11 +72,11 @@ class TaskGraphBuilderTest {
 	
 	@Test
 	void testBuilderWithNoLinks() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		builder.addTask("a", 1);
 		builder.addTask("b", 1);
 		
-		TaskGraph graph = builder.buildGraph();
+		TaskGraphOld graph = builder.buildGraph();
 		
 		assertEquals(2, graph.getAll().size());
 		assertEquals(2, graph.getRoots().size());
@@ -85,10 +85,10 @@ class TaskGraphBuilderTest {
 	
 	@Test
 	void testBottomTime() {
-		TaskGraph graph = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld graph = TestGraphUtils.buildTestGraphA();
 		
-		Task a = null, b = null, c = null, d = null;
-		for(Task task : graph.getAll()) {
+		TaskOld a = null, b = null, c = null, d = null;
+		for(TaskOld task : graph.getAll()) {
 			switch(task.getName()) {
 			case "a":
 				a = task;

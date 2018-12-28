@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 //import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 /**
@@ -25,12 +25,12 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder {
 	 */
 	@Override
 	public List<TreeSchedule> getChildSchedules(TreeSchedule schedule) {
-		List<Task> allocatable = new ArrayList<>(schedule.getAllocatable());
+		List<TaskOld> allocatable = new ArrayList<>(schedule.getAllocatable());
 
 		// Robert's first Java lambda
 		// ordered such that largest bottom order first
 		allocatable.sort(
-				(Task t1, Task t2) -> schedule.getGraph().getBottomTime(t2) - schedule.getGraph().getBottomTime(t1));
+				(TaskOld t1, TaskOld t2) -> schedule.getGraph().getBottomTime(t2) - schedule.getGraph().getBottomTime(t1));
 
 		List<TreeSchedule> children = new ArrayList<TreeSchedule>();
 
@@ -38,7 +38,7 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder {
 		// I didn't use getFullSchedule() because comments says it may return null
 		// Schedule parentSchedule = new ListSchedule(schedule.getGraph(),
 		// schedule.computeTaskLists());
-		for (Task task : allocatable) {
+		for (TaskOld task : allocatable) {
 			children.addAll(greedyChildren(schedule, task));
 		}
 
@@ -46,7 +46,7 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder {
 
 	}
 
-	private List<TreeSchedule> greedyChildren(TreeSchedule parentSchedule, Task task) {
+	private List<TreeSchedule> greedyChildren(TreeSchedule parentSchedule, TaskOld task) {
 		
 		//A small optimization to reduce equivalent schedules by only allowing 1 free processor
 		int processorsToAllocate = Math.min(parentSchedule.getNumberOfUsedProcessors() + 1, numProcessors);

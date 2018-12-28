@@ -17,9 +17,9 @@ import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
-import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
+import se306group8.scheduleoptimizer.dotfile.DOTFileHandlerOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class BranchBoundOptimality {
@@ -29,8 +29,8 @@ public class BranchBoundOptimality {
 	void testProduceCompleteScheduleMediumGraph() throws IOException, InterruptedException {
 		String graphName = "2p_Fork_Nodes_10_CCR_1.97_WeightType_Random.dot";
 
-		DOTFileHandler reader = new DOTFileHandler();
-		TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+		DOTFileHandlerOld reader = new DOTFileHandlerOld();
+		TaskGraphOld graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
 		Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
 
 		long start = System.nanoTime();
@@ -59,7 +59,7 @@ public class BranchBoundOptimality {
 		names.sort(null);
 
 		for(String graphName : names) {
-			DOTFileHandler reader = new DOTFileHandler();
+			DOTFileHandlerOld reader = new DOTFileHandlerOld();
 
 			long start = System.nanoTime();
 			Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
@@ -68,7 +68,7 @@ public class BranchBoundOptimality {
 
 			System.out.println("Starting '" + graphName + "'");
 
-			TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+			TaskGraphOld graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
 
 			int processors = optimal.getNumberOfUsedProcessors();
 			Schedule s = new BranchBoundSchedulingAlgorithm(new GreedyChildScheduleFinder(processors), new CriticalPathHeuristic()).produceCompleteSchedule(graph, optimal.getNumberOfUsedProcessors());
@@ -81,7 +81,7 @@ public class BranchBoundOptimality {
 
 	@Test
 	void testProduceCompleteScheduleTinyGraph() throws IOException, InterruptedException {
-		TaskGraph graph = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld graph = TestGraphUtils.buildTestGraphA();
 		Assertions.assertEquals(8, new BranchBoundSchedulingAlgorithm(new GreedyChildScheduleFinder(2), new CriticalPathHeuristic()).produceCompleteSchedule(graph, 2).getTotalRuntime());
 	}
 

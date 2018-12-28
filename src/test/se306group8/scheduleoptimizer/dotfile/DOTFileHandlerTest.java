@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilderOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 /** Tests the DOT file IO by reading and writing several files from disk. The writer is checked by reading the file back in. */
@@ -23,8 +23,8 @@ class DOTFileHandlerTest {
 	void testReadValidation() throws IOException {
 		Path path = Paths.get("res", "test", "testgraphs", "a.dot");
 		
-		DOTFileHandler handler = new DOTFileHandler();
-		TaskGraph graph = handler.readTaskGraph(path);
+		DOTFileHandlerOld handler = new DOTFileHandlerOld();
+		TaskGraphOld graph = handler.readTaskGraph(path);
 		
 		Assertions.assertEquals(graph, TestGraphUtils.buildTestGraphA());
 	}
@@ -33,13 +33,13 @@ class DOTFileHandlerTest {
 	void testReadCoverage() throws IOException {
 		Path path = Paths.get("res", "test", "testgraphs", "graph_with_coverage.dot");
 		
-		DOTFileHandler handler = new DOTFileHandler();
+		DOTFileHandlerOld handler = new DOTFileHandlerOld();
 		Assertions.assertEquals(handler.readTaskGraph(path), TestGraphUtils.buildTestGraphA());
 	}
 
 	@Test
 	void testReadInputDataset() throws IOException {
-		DOTFileHandler handler = new DOTFileHandler();
+		DOTFileHandlerOld handler = new DOTFileHandlerOld();
 		for(Path p : Files.newDirectoryStream(Paths.get("dataset", "input"), "*.dot")) {
 			try {
 				handler.readTaskGraph(p);
@@ -59,7 +59,7 @@ class DOTFileHandlerTest {
 	
 	@Test
 	void testReadSchedule() throws IOException {
-		DOTFileHandler handler = new DOTFileHandler();
+		DOTFileHandlerOld handler = new DOTFileHandlerOld();
 		
 		Path schedule = Paths.get("res", "test", "testgraphs", "a_schedule.dot");
 		
@@ -69,7 +69,7 @@ class DOTFileHandlerTest {
 	/** This is a regression test for the double writing of the graph to the same file. */
 	@Test
 	void testTwiceWrite() throws IOException {
-		TaskGraph graph = new TaskGraphBuilder()
+		TaskGraphOld graph = new TaskGraphBuilderOld()
 				.addTask("a", 1)
 				.addTask("b", 2)
 				.addTask("c", 1)
@@ -100,7 +100,7 @@ class DOTFileHandlerTest {
 		ListSchedule schedule = new ListSchedule(graph, Arrays.asList(graph.getAll()));
 		
 		Path tmpFolder = Files.createTempDirectory("testGraphs");
-		DOTFileHandler handler = new DOTFileHandler();
+		DOTFileHandlerOld handler = new DOTFileHandlerOld();
 		
 		handler.write(tmpFolder.resolve("double-write.dot"), schedule, schedule.getGraph().getName());
 		
@@ -114,7 +114,7 @@ class DOTFileHandlerTest {
 	void testWrite() throws IOException {
 		Schedule output = TestScheduleUtils.createTestScheduleA();
 		
-		DOTFileHandler handler = new DOTFileHandler();
+		DOTFileHandlerOld handler = new DOTFileHandlerOld();
 		
 		Path tmpFolder = Files.createTempDirectory("testGraphs");
 		handler.write(tmpFolder.resolve("a.dot"), output, output.getGraph().getName());

@@ -11,15 +11,15 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 class ListScheduleTest {
 	private ListSchedule schedule, scheduleFromList, scheduleFromAllocation;
-	private TaskGraph graph;
+	private TaskGraphOld graph;
 	
-	private Task a, b, c, d;
+	private TaskOld a, b, c, d;
 	
 	/** We create a schedule with the same task graph as testGraphA, and schedule the tasks
 	 * with task A and B on processor 1 and C and D on processor 2. 
@@ -29,7 +29,7 @@ class ListScheduleTest {
 	void setUp() {
 		graph = TestGraphUtils.buildTestGraphA();
 		
-		for(Task task : graph.getAll()) {
+		for(TaskOld task : graph.getAll()) {
 			switch(task.getName()) {
 			case "a":
 				a = task;
@@ -48,10 +48,10 @@ class ListScheduleTest {
 			}
 		}
 		
-		List<Task> processorOne = Arrays.asList(a, b);
-		List<Task> processorTwo = Arrays.asList(c, d);
+		List<TaskOld> processorOne = Arrays.asList(a, b);
+		List<TaskOld> processorTwo = Arrays.asList(c, d);
 		
-		Map<Task, ProcessorAllocation> allocations = new HashMap<>();
+		Map<TaskOld, ProcessorAllocation> allocations = new HashMap<>();
 		
 		allocations.put(a, new ProcessorAllocation(a, 0, 1));
 		allocations.put(b, new ProcessorAllocation(b, 2, 1));

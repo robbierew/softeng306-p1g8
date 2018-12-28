@@ -15,7 +15,7 @@ import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 /**
  * A parallel algorithm to find optimal schedules. It uses depth first search
@@ -145,7 +145,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	}
 	
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+	public Schedule produceCompleteScheduleHook(TaskGraphOld graph, int numberOfProcessors) throws InterruptedException {
 		
 		//all the ForkJobs must run in these threads
 		pool = new ForkJoinPool(parallelism);

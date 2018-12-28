@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
-import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 public class DataReadyTimeHeuristic implements MinimumHeuristic{
 
@@ -18,13 +18,13 @@ public class DataReadyTimeHeuristic implements MinimumHeuristic{
 	
 	@Override
 	public int estimate(TreeSchedule schedule) {
-		Collection<Task> free = schedule.getAllocatable();
-		TaskGraph tg = schedule.getGraph();
+		Collection<TaskOld> free = schedule.getAllocatable();
+		TaskGraphOld tg = schedule.getGraph();
 		
 		//formula from "Reducing the solution space of optimal task scheduling" page 6
 		int max = 0;
 		
-		for (Task n:free) {
+		for (TaskOld n:free) {
 			max=Math.max(max, tdr(n,schedule)+tg.getBottomTime(n));
 		}
 		
@@ -33,9 +33,9 @@ public class DataReadyTimeHeuristic implements MinimumHeuristic{
 	}
 	
 	//formula from "Reducing the solution space of optimal task scheduling" page 3
-	private int tdr(Task nj, int p, TreeSchedule schedule) {
+	private int tdr(TaskOld nj, int p, TreeSchedule schedule) {
 		int max = 0;
-		for (Dependency dep:nj.getParents()) {
+		for (DependencyOld dep:nj.getParents()) {
 			ProcessorAllocation pa = schedule.getAllocationFor(dep.getSource());
 			if (pa.processor==p) {
 				max = Math.max(max, pa.endTime);
@@ -47,7 +47,7 @@ public class DataReadyTimeHeuristic implements MinimumHeuristic{
 	}
 	
 	//formula from "Reducing the solution space of optimal task scheduling" page 5
-	private int tdr(Task n, TreeSchedule schedule) {
+	private int tdr(TaskOld n, TreeSchedule schedule) {
 		int min = Integer.MAX_VALUE;
 		for (int p=1;p<=processors;p++) {
 			min=Math.min(min, tdr(n,p,schedule));

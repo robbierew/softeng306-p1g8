@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Objects;
 
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
+import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 /**
  * This class represents a partial schedule. It stores a parent schedule, and
@@ -22,7 +22,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final TreeSchedule parent;
 
 	/** If this is null then this is the empty schedule */
-	private final TaskGraph graph;
+	private final TaskGraphOld graph;
 	private final MinimumHeuristic heuristic;
 
 	// Calculated fields
@@ -54,8 +54,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final boolean[] fixed;
 	
 	//Sets
-	private final List<Task> allocatable;
-	private final List<Task> allocated;
+	private final List<TaskOld> allocatable;
+	private final List<TaskOld> allocated;
 
 	// Booleans
 	private final boolean isComplete;
@@ -72,7 +72,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	 * @param heuristic The heuristic that is used to calculate the lower bound for
 	 *                  this schedule and all children.
 	 */
-	public TreeSchedule(TaskGraph graph, MinimumHeuristic heuristic, int processors) {
+	public TreeSchedule(TaskGraphOld graph, MinimumHeuristic heuristic, int processors) {
 		assert graph != null;
 		int numberOfTasks = graph.getAll().size();
 
@@ -88,18 +88,18 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		numberOfTasksOnProcessor = new int[processors];
 		
 		numberOfParentsUncheduled = new int[numberOfTasks];
-		for (Task task : graph.getAll()) {
+		for (TaskOld task : graph.getAll()) {
 			numberOfParentsUncheduled[task.getId()] = task.getParents().size();
 		}
 
 		lastAllocationOnProcessor = new ProcessorAllocation[processors];
 
 		allocatable = new ArrayList<>(graph.getRoots());
-		((ArrayList<Task>) allocatable).ensureCapacity(graph.getAll().size());
+		((ArrayList<TaskOld>) allocatable).ensureCapacity(graph.getAll().size());
 		allocatable.sort((a, b) -> a.getId() - b.getId());
 		
 		allocated = new ArrayList<>(graph.getAll().size());
-		((ArrayList<Task>) allocated).ensureCapacity(graph.getAll().size());
+		((ArrayList<TaskOld>) allocated).ensureCapacity(graph.getAll().size());
 		
 		isComplete = false;
 
@@ -124,12 +124,12 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	/**
 	 * Creates a schedule from a parent schedule and an allocation.
 	 */
-	public TreeSchedule(Task task, int processor, TreeSchedule parent) {
+	public TreeSchedule(TaskOld task, int processor, TreeSchedule parent) {
 		this(-1, -1, task, processor, parent);
 	}
 	
 	/** An id of -1 means that this schedule has not been given an id. */
-	public TreeSchedule(int lowerBound, int id, Task task, int processor, TreeSchedule parent) {
+	public TreeSchedule(int lowerBound, int id, TaskOld task, int processor, TreeSchedule parent) {
 		this.graph = parent.graph;
 		this.parent = parent;
 		this.heuristic = parent.heuristic;
@@ -177,7 +177,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 
 		//Find the new tasks to schedule by counting the number of parents they have left.
 		for (int i = 0; i < task.getChildren().size(); i++) {
-			Task child = task.getChildren().get(i).getTarget();
+			TaskOld child = task.getChildren().get(i).getTarget();
 			
 			numberOfParentsUncheduled[child.getId()]--;
 
@@ -198,8 +198,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		int startTime = 0;
 		
 		for (int i = 0; i < task.getParents().size(); i++) {
-			Dependency dep = task.getParents().get(i);
-			Task parentTask = dep.getSource();
+			DependencyOld dep = task.getParents().get(i);
+			TaskOld parentTask = dep.getSource();
 			removableTasks[parentTask.getId()] = false; //None of the parents can be removed.
 			
 			ProcessorAllocation alloc = parent.getAllocationFor(parentTask);
@@ -217,8 +217,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		}
 		
 		for (int i = 0; i < task.getParents().size(); i++) {
-			Dependency dep = task.getParents().get(i);
-			Task parentTask = dep.getSource();
+			DependencyOld dep = task.getParents().get(i);
+			TaskOld parentTask = dep.getSource();
 			ProcessorAllocation alloc = parent.getAllocationFor(parentTask);
 			
 			if(alloc.processor != processor) {
@@ -233,7 +233,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		idleTime = parent.idleTime + startTime - processorReadyTime;
 
 		for (int i = 0; i < parent.allocatable.size(); i++) {
-			Task oldAllocatable = parent.allocatable.get(i);
+			TaskOld oldAllocatable = parent.allocatable.get(i);
 			
 			if (oldAllocatable != task) {
 				allocatable.add(oldAllocatable);
@@ -277,12 +277,12 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		int childId = -1;
 		
 		//Populate the child values
-		for(Task task : allocatable) {
+		for(TaskOld task : allocatable) {
 			switch(task.getParents().size()) {
 			case 0:
 				break;
 			case 1:
-				Dependency dep = task.getParents().get(0);
+				DependencyOld dep = task.getParents().get(0);
 				dataReadyTime[task.getId()] = dep.getCommunicationCost() + getAllocationFor(dep.getSource()).endTime;
 				
 				ProcessorAllocation alloc = getAllocationFor(dep.getSource());
@@ -302,7 +302,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			case 0:
 				break;
 			case 1:
-				Dependency dep = task.getChildren().get(0);
+				DependencyOld dep = task.getChildren().get(0);
 				outWeight[task.getId()] = dep.getCommunicationCost();
 				
 				//Check if this child is the same as all the other children
@@ -342,7 +342,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 	
 	/** Returns true if this task can be removed while keeping the topological ordering. */
-	public boolean isRemovable(Task t) {
+	public boolean isRemovable(TaskOld t) {
 		return removableTasks[t.getId()];
 	}
 	
@@ -372,7 +372,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	 * Returns the ProcessorAllocation instance that this task was scheduled on.
 	 * This returns null if the task has not been scheduled.
 	 */
-	public ProcessorAllocation getAllocationFor(Task t) {
+	public ProcessorAllocation getAllocationFor(TaskOld t) {
 		return allocations[t.getId()];
 	}
 	
@@ -393,12 +393,12 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return lastAllocationOnProcessor[processor - 1];
 	}
 
-	public List<List<Task>> computeTaskLists() {
+	public List<List<TaskOld>> computeTaskLists() {
 		if (isEmpty()) {
 			return new ArrayList<>();
 		}
 
-		List<List<Task>> result;
+		List<List<TaskOld>> result;
 		if (parent.isEmpty()) {
 			result = new ArrayList<>();
 		} else {
@@ -450,11 +450,11 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return getLowerBound() - o.getLowerBound();
 	}
 
-	public TaskGraph getGraph() {
+	public TaskGraphOld getGraph() {
 		return this.graph;
 	}
 
-	public Collection<Task> getAllocated() {
+	public Collection<TaskOld> getAllocated() {
 		return allocated;
 	}
 	
@@ -474,7 +474,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return Objects.hash(graph, Arrays.hashCode(allocations));
 	}
 
-	public List<Task> getAllocatable() {
+	public List<TaskOld> getAllocatable() {
 		return allocatable;
 	}
 
@@ -500,11 +500,11 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 
 	/** Returns the time by which a task must have started for the outgoing costs to be valid. */
-	public int getRequiredBy(Task task) {
+	public int getRequiredBy(TaskOld task) {
 		return requiredBy[task.getId()];
 	}
 
-	public boolean wasFixed(Task task) {
+	public boolean wasFixed(TaskOld task) {
 		return fixed[task.getId()];
 	}
 }

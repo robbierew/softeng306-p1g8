@@ -44,9 +44,9 @@ import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.NonPruningScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.ObjectQueueScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
-import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
+import se306group8.scheduleoptimizer.dotfile.DOTFileHandlerOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 /** This class is a testing utility that runs the chosen algorithm and writes out various metrics. */
 public class PerformanceTest {
@@ -164,10 +164,10 @@ public class PerformanceTest {
 
 				System.out.println("Starting Test " + i + "/" + (n == -1 ? names.size() : n) + " " + graphName);
 
-				DOTFileHandler reader = new DOTFileHandler();
+				DOTFileHandlerOld reader = new DOTFileHandlerOld();
 
 				Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
-				TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+				TaskGraphOld graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
 
 				int processors;
 				Matcher m = numberExtraction.matcher(graphName);

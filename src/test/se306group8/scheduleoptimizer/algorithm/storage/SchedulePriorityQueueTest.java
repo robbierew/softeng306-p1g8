@@ -6,15 +6,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 class SchedulePriorityQueueTest {
 	private SchedulePriorityQueue priorityQueue;
 	private ScheduleArray array;
-	private TaskGraph graph;
-	private Task task1, task2;
+	private TaskGraphOld graph;
+	private TaskOld task1, task2;
 	private int parent;
 	private int child1, child2, child3;
 	

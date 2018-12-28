@@ -9,7 +9,7 @@ import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 
 /**
  * A recursive DFS search of the solution tree. 
@@ -36,7 +36,7 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 	}
 
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+	public Schedule produceCompleteScheduleHook(TaskGraphOld graph, int numberOfProcessors) throws InterruptedException {
 		
 		visited = 1;
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);

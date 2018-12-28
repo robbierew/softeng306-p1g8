@@ -1,14 +1,14 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilderOld;
 
 /** This class creates test graphs */
 public class TestGraphUtils {
 	
 	/** Builds the graph found in a.dot in the test graph folder. */
-	public static TaskGraph buildTestGraphA() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+	public static TaskGraphOld buildTestGraphA() {
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		
 		builder.setName("Graph a");
 		
@@ -25,8 +25,8 @@ public class TestGraphUtils {
 		return builder.buildGraph();
 	}
 	
-	public static TaskGraph buildTestGraphB() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+	public static TaskGraphOld buildTestGraphB() {
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		
 		builder.setName("Graph b");
 		
@@ -37,8 +37,8 @@ public class TestGraphUtils {
 		return builder.buildGraph();
 	}
 	
-	public static TaskGraph buildTestGraphC() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+	public static TaskGraphOld buildTestGraphC() {
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		
 		builder.setName("Graph c");
 		

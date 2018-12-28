@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
@@ -81,7 +81,7 @@ public class ScheduleManager extends Manager {
 		List<Label> processorLabels = new ArrayList<Label>();
 		
 		// Loop through all processors used in schedule
-		for (List<Task> taskList : bestSchedule.computeTaskLists()) {
+		for (List<TaskOld> taskList : bestSchedule.computeTaskLists()) {
 			
 			processorLabels.add(createProcessorLabel(currentProcessor));
 			
@@ -135,12 +135,12 @@ public class ScheduleManager extends Manager {
 		return true;
 	}
 	
-	private List<Rectangle> getTaskRectangles(TreeSchedule bestSchedule, List<Task> taskList) {
+	private List<Rectangle> getTaskRectangles(TreeSchedule bestSchedule, List<TaskOld> taskList) {
 		
 		List<Rectangle> rectangles = new ArrayList<Rectangle>();
 
 		// Loop through each task in list and add to graph
-					for (Task task : taskList) {
+					for (TaskOld task : taskList) {
 
 						int startTime = bestSchedule.getAllocationFor(task).startTime;
 						
@@ -167,12 +167,12 @@ public class ScheduleManager extends Manager {
 		return rectangles;
 	}
 	
-	private List<Label> getTaskLabels(TreeSchedule bestSchedule, List<Task> taskList) {
+	private List<Label> getTaskLabels(TreeSchedule bestSchedule, List<TaskOld> taskList) {
 		
 		List<Label> taskNames = new ArrayList<Label>();
 		
 		// Loop through each task in list and add label to list
-		for (Task task : taskList) {
+		for (TaskOld task : taskList) {
 
 			int startTime = bestSchedule.getAllocationFor(task).startTime;
 			

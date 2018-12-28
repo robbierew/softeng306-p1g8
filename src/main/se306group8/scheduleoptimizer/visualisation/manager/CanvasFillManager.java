@@ -12,8 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
-import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
@@ -93,13 +93,13 @@ public class CanvasFillManager extends Manager {
     	
     	for (int i = parents.size() - 2; i >= 0; i--) {
     		ProcessorAllocation allocation = parents.get(i).getMostRecentAllocation();
-        	Collection<Task> allocSet = new HashSet<>(parents.get(i).getAllocatable());
+        	Collection<TaskOld> allocSet = new HashSet<>(parents.get(i).getAllocatable());
         	
         	//Add the task and remove all children of it to get the allocatable tasks.
         	allocSet.add(allocation.task);
-        	allocSet.removeAll(allocation.task.getChildren().stream().map(Dependency::getTarget).collect(Collectors.toSet()));
+        	allocSet.removeAll(allocation.task.getChildren().stream().map(DependencyOld::getTarget).collect(Collectors.toSet()));
         	
-        	List<Task> allocatable = new ArrayList<>(allocSet);
+        	List<TaskOld> allocatable = new ArrayList<>(allocSet);
         	allocatable.sort((a, b) -> a.getId() - b.getId());
     		
         	int numberOfProcessors = parents.get(i).getNumberOfUsedProcessors();
@@ -115,7 +115,7 @@ public class CanvasFillManager extends Manager {
     }
 
     // Convert allocation to number (as per pseudocode)
-    private double convertToNumber(ProcessorAllocation allocation, List<Task> allocatable, int processors) {
+    private double convertToNumber(ProcessorAllocation allocation, List<TaskOld> allocatable, int processors) {
     	double taskContribution = (double) allocatable.indexOf(allocation.task) / allocatable.size();
     	double processorContribution = (double) (allocation.processor - 1) / processors / allocatable.size();
     	double result =  taskContribution + processorContribution;

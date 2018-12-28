@@ -20,21 +20,21 @@ import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.dotfile.Token.Type;
 import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
+import se306group8.scheduleoptimizer.taskgraph.TaskOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilderOld;
 
 /** This class handles the reading and writing of .dot files to and from the disk.
  * 
  * <a>https://www.graphviz.org/doc/info/lang.html</a> */
-public class DOTFileHandler {
+public class DOTFileHandlerOld {
 	private final String nodeWeightAttribute;
 	private final String edgeWeightAttribute;
 	private final String startTimeAttribute;
 	private final String processorAttribute;
 
 	/** Creates a file reader with the default parameters. */
-	public DOTFileHandler() {
+	public DOTFileHandlerOld() {
 		nodeWeightAttribute = "Weight";
 		edgeWeightAttribute = "Weight";
 		startTimeAttribute = "Start";
@@ -48,49 +48,49 @@ public class DOTFileHandler {
 	 * @return The parsed TaskGraph, it will not be null.
 	 * @throws IOException If the file cannot be read, or the file is not in the format prescribed in class.
 	 */
-	public TaskGraph readTaskGraph(Path path) throws IOException {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+	public TaskGraphOld readTaskGraph(Path path) throws IOException {
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		
 		read(path, builder, null);
 		
 		return builder.buildGraph();
 	}
 
-//	/**
-//	 * Reads a .dot file from the disk.
-//	 * 
-//	 * @param path The path to find the file at. It must not be null.
-//	 * @return The parsed Schedule, it will not be null.
-//	 * @throws IOException If the file cannot be read, or the file is not in the format prescribed in class.
-//	 */
-//	public Schedule readSchedule(Path path) throws IOException {
-//		TaskGraphBuilder builder = new TaskGraphBuilder();
-//		TreeMap<Integer, TreeMap<Integer, String>> processorMapping = new TreeMap<>();
-//		
-//		//Read populates the processorMapping and the builder
-//		read(path, builder, processorMapping);
-//		
-//		TaskGraph graph = builder.buildGraph();
-//		HashMap<String, Task> taskMapping = new HashMap<>();
-//		
-//		//Assign each name to a task
-//		for(Task t : graph.getAll()) {
-//			taskMapping.put(t.getName(), t);
-//		}
-//		
-//		List<List<Task>> processorAllocation = new ArrayList<>();
-//		
-//		for(TreeMap<Integer, String> map : processorMapping.values()) {
-//			ArrayList<Task> list = new ArrayList<>();
-//			processorAllocation.add(list);
-//			
-//			for(String taskName : map.values()) {
-//				list.add(taskMapping.get(taskName));
-//			}
-//		}
-//		
-//		return new ListSchedule(graph, processorAllocation);
-//	}
+	/**
+	 * Reads a .dot file from the disk.
+	 * 
+	 * @param path The path to find the file at. It must not be null.
+	 * @return The parsed Schedule, it will not be null.
+	 * @throws IOException If the file cannot be read, or the file is not in the format prescribed in class.
+	 */
+	public Schedule readSchedule(Path path) throws IOException {
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
+		TreeMap<Integer, TreeMap<Integer, String>> processorMapping = new TreeMap<>();
+		
+		//Read populates the processorMapping and the builder
+		read(path, builder, processorMapping);
+		
+		TaskGraphOld graph = builder.buildGraph();
+		HashMap<String, TaskOld> taskMapping = new HashMap<>();
+		
+		//Assign each name to a task
+		for(TaskOld t : graph.getAll()) {
+			taskMapping.put(t.getName(), t);
+		}
+		
+		List<List<TaskOld>> processorAllocation = new ArrayList<>();
+		
+		for(TreeMap<Integer, String> map : processorMapping.values()) {
+			ArrayList<TaskOld> list = new ArrayList<>();
+			processorAllocation.add(list);
+			
+			for(String taskName : map.values()) {
+				list.add(taskMapping.get(taskName));
+			}
+		}
+		
+		return new ListSchedule(graph, processorAllocation);
+	}
 	
 	/**
 	 * Internal method to read a dot file from a map into a designated builder.
@@ -103,7 +103,7 @@ public class DOTFileHandler {
 	 * @param mapping A TreeMap storing the mapping from processor to a mapping from start-time to task name.
 	 * @throws IOException
 	 */
-	private void read(Path path, TaskGraphBuilder builder, TreeMap<Integer, TreeMap<Integer, String>> mapping) throws IOException {
+	private void read(Path path, TaskGraphBuilderOld builder, TreeMap<Integer, TreeMap<Integer, String>> mapping) throws IOException {
 		List<Token> tokens = new ArrayList<>();
 		
 		try(PushbackReader reader = new PushbackReader(Files.newBufferedReader(path, StandardCharsets.UTF_8))) {
@@ -171,8 +171,8 @@ public class DOTFileHandler {
 		}
 	}
 
-	/** Takes a list of tokens and populates the builder and the mapping. Very similar to {@link DOTFileHandler#read(Path, TaskGraphBuilderOld, TreeMap)} */
-	private void parseTokens(ListIterator<Token> iter, TaskGraphBuilder builder, TreeMap<Integer, TreeMap<Integer, String>> processorMapping) throws IOException {
+	/** Takes a list of tokens and populates the builder and the mapping. Very similar to {@link DOTFileHandlerOld#read(Path, TaskGraphBuilderOld, TreeMap)} */
+	private void parseTokens(ListIterator<Token> iter, TaskGraphBuilderOld builder, TreeMap<Integer, TreeMap<Integer, String>> processorMapping) throws IOException {
 		//Read the header
 		Token graphType = iter.next();
 		if(!graphType.value.toLowerCase().equals("digraph"))
@@ -181,9 +181,9 @@ public class DOTFileHandler {
 		//Read the name
 		Token next = iter.next();
 		if(next.type == Type.ID || next.type == Type.QUOTE) {
-			builder.setGraphName(next.value);
+			builder.setName(next.value);
 		} else if(next.value.equals("{")) {
-			builder.setGraphName("");
+			builder.setName("");
 		} else {
 			throw new IOException("Expected ID or QUOTE or {");
 		}
@@ -198,7 +198,7 @@ public class DOTFileHandler {
 
 	/** Reads the list of statements, that may or may not be separated by semi-colons. If processorMapping is not null
 	 * it will be populated with the start time and processor allocations. */
-	private void readStatementList(ListIterator<Token> iter, TaskGraphBuilder builder, TreeMap<Integer, TreeMap<Integer, String>> processorMapping) throws IOException {
+	private void readStatementList(ListIterator<Token> iter, TaskGraphBuilderOld builder, TreeMap<Integer, TreeMap<Integer, String>> processorMapping) throws IOException {
 		//Ignore the opening {
 		iter.next();
 		
@@ -318,10 +318,10 @@ public class DOTFileHandler {
 			}
 		}
 
-		public Attributes(Task task, int processorNumber, int startTime) {
+		public Attributes(TaskOld task, int processorNumber, int startTime) {
 			this.startTime = startTime;
 			this.processor = processorNumber;
-			this.nodeWeight = task.getComputeCost();
+			this.nodeWeight = task.getCost();
 		}
 
 		public Attributes(DependencyOld edge) {
@@ -378,16 +378,16 @@ public class DOTFileHandler {
 		}
 	}
 
-//	/**
-//	 * Writes a completed schedule to the disk. The schedule must be complete and valid.
-//	 * 
-//	 * @param path The path to write to. This must not be null. The file will be created or overwritten.
-//	 * @param schedule The complete schedule to write to disk. This must not be null and must be valid and complete.
-//	 * @throws IOException If the file cannot be written to for some reason.
-//	 */
-//	public void write(Path path, Schedule schedule) throws IOException {
-//		write(path, schedule, convertToOutputName(schedule.getGraph().getName()));
-//	}
+	/**
+	 * Writes a completed schedule to the disk. The schedule must be complete and valid.
+	 * 
+	 * @param path The path to write to. This must not be null. The file will be created or overwritten.
+	 * @param schedule The complete schedule to write to disk. This must not be null and must be valid and complete.
+	 * @throws IOException If the file cannot be written to for some reason.
+	 */
+	public void write(Path path, Schedule schedule) throws IOException {
+		write(path, schedule, convertToOutputName(schedule.getGraph().getName()));
+	}
 	
 	private String convertToOutputName(String name) {
 		int indexOfSecondLetter = name.offsetByCodePoints(0, 1);
@@ -395,47 +395,47 @@ public class DOTFileHandler {
 		return "output" + name.substring(0, indexOfSecondLetter).toUpperCase(Locale.ROOT) + name.substring(indexOfSecondLetter);
 	}
 
-//	/**
-//	 * Writes a completed schedule to the disk. The schedule must be complete and valid.
-//	 * 
-//	 * @param path The path to write to. This must not be null. The file will be created or overwritten.
-//	 * @param schedule The complete schedule to write to disk. This must not be null and must be valid and complete.
-//	 * @param name Overrides the name of the graph
-//	 * @throws IOException If the file cannot be written to for some reason.
-//	 */
-//	public void write(Path path, Schedule schedule, String name) throws IOException {
-//		if(Files.isDirectory(path)) {
-//			throw new IOException(path.toString() + " is a directory.");
-//		}
-//		
-//		StringBuilder output = new StringBuilder();
-//
-//		TaskGraph graph = schedule.getGraph();
-//
-//		output.append("digraph \"").append(name).append("\" {").append(System.lineSeparator());
-//
-//		for(Task task : graph.getAll()) {
-//			Attributes attr = new Attributes(task, schedule.getProcessorNumber(task), schedule.getStartTime(task));
-//
-//			output
-//			.append('\t').append(task.getName())
-//			.append('\t').append(attr.toString()).append(";").append(System.lineSeparator());
-//		}
-//
-//		for(DependencyOld edge : graph.getEdges()) {
-//			Attributes attr = new Attributes(edge);
-//
-//			output
-//			.append('\t').append(edge.getSource().getName()).append(" -> ").append(edge.getTarget().getName())
-//			.append('\t').append(attr.toString()).append(";").append(System.lineSeparator());
-//		}
-//
-//		output.append("}").append(System.lineSeparator());
-//
-//		Path folder = path.toAbsolutePath().getParent();
-//		Files.createDirectories(folder);
-//		try (BufferedWriter reader = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-//			reader.write(output.toString());
-//		}
-//	}
+	/**
+	 * Writes a completed schedule to the disk. The schedule must be complete and valid.
+	 * 
+	 * @param path The path to write to. This must not be null. The file will be created or overwritten.
+	 * @param schedule The complete schedule to write to disk. This must not be null and must be valid and complete.
+	 * @param name Overrides the name of the graph
+	 * @throws IOException If the file cannot be written to for some reason.
+	 */
+	public void write(Path path, Schedule schedule, String name) throws IOException {
+		if(Files.isDirectory(path)) {
+			throw new IOException(path.toString() + " is a directory.");
+		}
+		
+		StringBuilder output = new StringBuilder();
+
+		TaskGraphOld graph = schedule.getGraph();
+
+		output.append("digraph \"").append(name).append("\" {").append(System.lineSeparator());
+
+		for(TaskOld task : graph.getAll()) {
+			Attributes attr = new Attributes(task, schedule.getProcessorNumber(task), schedule.getStartTime(task));
+
+			output
+			.append('\t').append(task.getName())
+			.append('\t').append(attr.toString()).append(";").append(System.lineSeparator());
+		}
+
+		for(DependencyOld edge : graph.getEdges()) {
+			Attributes attr = new Attributes(edge);
+
+			output
+			.append('\t').append(edge.getSource().getName()).append(" -> ").append(edge.getTarget().getName())
+			.append('\t').append(attr.toString()).append(";").append(System.lineSeparator());
+		}
+
+		output.append("}").append(System.lineSeparator());
+
+		Path folder = path.toAbsolutePath().getParent();
+		Files.createDirectories(folder);
+		try (BufferedWriter reader = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+			reader.write(output.toString());
+		}
+	}
 }

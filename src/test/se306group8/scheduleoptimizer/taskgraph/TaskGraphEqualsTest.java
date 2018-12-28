@@ -13,22 +13,22 @@ class TaskGraphEqualsTest {
 
 	@Test
 	void testEqualsTask() {
-		Task b1 = null;
-		for(Task t : TestGraphUtils.buildTestGraphA().getAll()) {
+		TaskOld b1 = null;
+		for(TaskOld t : TestGraphUtils.buildTestGraphA().getAll()) {
 			if(t.getName().equals("b")) {
 				b1 = t;
 			}
 		}
 		
-		Task b2 = null;
-		for(Task t : TestGraphUtils.buildTestGraphA().getAll()) {
+		TaskOld b2 = null;
+		for(TaskOld t : TestGraphUtils.buildTestGraphA().getAll()) {
 			if(t.getName().equals("b")) {
 				b2 = t;
 			}
 		}
 		
-		Task a1 = null;
-		for(Task t : TestGraphUtils.buildTestGraphA().getAll()) {
+		TaskOld a1 = null;
+		for(TaskOld t : TestGraphUtils.buildTestGraphA().getAll()) {
 			if(t.getName().equals("a")) {
 				a1 = t;
 			}
@@ -41,14 +41,14 @@ class TaskGraphEqualsTest {
 	/** Checks for two tasks with the cost, and dependencies but differing names. */
 	@Test
 	void testNotEquals() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		builder.addTask("a", 1);
 		builder.addTask("b", 1);
 		
-		TaskGraph graph = builder.buildGraph();
+		TaskGraphOld graph = builder.buildGraph();
 		
-		for(Task t1 : graph.getAll()) {
-			for(Task t2 : graph.getAll()) {
+		for(TaskOld t1 : graph.getAll()) {
+			for(TaskOld t2 : graph.getAll()) {
 				Assertions.assertEquals(t1.equals(t2), t1 == t2);
 			}
 		}
@@ -57,14 +57,14 @@ class TaskGraphEqualsTest {
 	/** Check equality of two tasks with different costs, dependencies and same names */
 	@Test
 	void testNotEqualsCosts() {
-		TaskGraphBuilder builderA = new TaskGraphBuilder();
+		TaskGraphBuilderOld builderA = new TaskGraphBuilderOld();
 		builderA.addTask("a", 1);
 		
-		TaskGraphBuilder builderB = new TaskGraphBuilder();
+		TaskGraphBuilderOld builderB = new TaskGraphBuilderOld();
 		builderB.addTask("a", 2);
 		
-		TaskGraph graphA = builderA.buildGraph();
-		TaskGraph graphB = builderB.buildGraph();
+		TaskGraphOld graphA = builderA.buildGraph();
+		TaskGraphOld graphB = builderB.buildGraph();
 		
 		Assertions.assertNotEquals(graphA.getAll().get(0), graphB.getAll().get(0));
 	}
@@ -72,13 +72,13 @@ class TaskGraphEqualsTest {
 	/** Check the communication cost of two nodes known to be equal, is rendered equal */
 	@Test
 	void testCommunicationCostsEqual() {
-		Task a = null;
-		Task b = null;
-		Task c = null;
-		Task d = null;
+		TaskOld a = null;
+		TaskOld b = null;
+		TaskOld c = null;
+		TaskOld d = null;
 		
 		// Assign task objects as specified in Tester graph
-		for(Task t : TestGraphUtils.buildTestGraphA().getAll()) {
+		for(TaskOld t : TestGraphUtils.buildTestGraphA().getAll()) {
 			switch(t.getName()) {
 				case "a":
 					a = t;

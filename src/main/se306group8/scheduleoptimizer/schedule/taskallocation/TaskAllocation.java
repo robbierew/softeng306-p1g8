@@ -1,17 +1,17 @@
-package se306group8.scheduleoptimizer.schedule;
+package se306group8.scheduleoptimizer.schedule.taskallocation;
 
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
 public class TaskAllocation {
 	private Task task;
-	private int processor;
+	private byte processor;
 	private int startTime;
 	private int endTime;
 	
 	public TaskAllocation(Task task, int startTime, int processor) {
 		this.task = task;
 		this.startTime = startTime;
-		this.processor = processor;
+		this.processor = (byte) processor;
 		
 		endTime = startTime + task.getComputeCost();
 	}
@@ -20,7 +20,7 @@ public class TaskAllocation {
 		return task;
 	}
 
-	public int getProcessor() {
+	public byte getProcessor() {
 		return processor;
 	}
 

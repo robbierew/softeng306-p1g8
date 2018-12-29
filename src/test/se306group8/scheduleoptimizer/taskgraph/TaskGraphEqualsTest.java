@@ -8,27 +8,27 @@ class TaskGraphEqualsTest {
 
 	@Test
 	void testEqualsTaskGraph() {
-		Assertions.assertEquals(TestGraphUtils.buildTestGraphA(), TestGraphUtils.buildTestGraphA());
+		Assertions.assertEquals(TestGraphUtilsOld.buildTestGraphA(), TestGraphUtilsOld.buildTestGraphA());
 	}
 
 	@Test
 	void testEqualsTask() {
 		TaskOld b1 = null;
-		for(TaskOld t : TestGraphUtils.buildTestGraphA().getAll()) {
+		for(TaskOld t : TestGraphUtilsOld.buildTestGraphA().getAll()) {
 			if(t.getName().equals("b")) {
 				b1 = t;
 			}
 		}
 		
 		TaskOld b2 = null;
-		for(TaskOld t : TestGraphUtils.buildTestGraphA().getAll()) {
+		for(TaskOld t : TestGraphUtilsOld.buildTestGraphA().getAll()) {
 			if(t.getName().equals("b")) {
 				b2 = t;
 			}
 		}
 		
 		TaskOld a1 = null;
-		for(TaskOld t : TestGraphUtils.buildTestGraphA().getAll()) {
+		for(TaskOld t : TestGraphUtilsOld.buildTestGraphA().getAll()) {
 			if(t.getName().equals("a")) {
 				a1 = t;
 			}
@@ -78,7 +78,7 @@ class TaskGraphEqualsTest {
 		TaskOld d = null;
 		
 		// Assign task objects as specified in Tester graph
-		for(TaskOld t : TestGraphUtils.buildTestGraphA().getAll()) {
+		for(TaskOld t : TestGraphUtilsOld.buildTestGraphA().getAll()) {
 			switch(t.getName()) {
 				case "a":
 					a = t;

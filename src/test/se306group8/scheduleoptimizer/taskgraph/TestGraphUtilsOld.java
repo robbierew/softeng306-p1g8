@@ -1,14 +1,16 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilderOld;
 
 /** This class creates test graphs */
-public class TestGraphUtils {
+public class TestGraphUtilsOld {
 	
 	/** Builds the graph found in a.dot in the test graph folder. */
-	public static TaskGraph buildTestGraphA() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+	public static TaskGraphOld buildTestGraphA() {
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		
-		builder.setGraphName("Graph a");
+		builder.setName("Graph a");
 		
 		builder.addTask("a", 2);
 		builder.addTask("b", 3);
@@ -23,10 +25,10 @@ public class TestGraphUtils {
 		return builder.buildGraph();
 	}
 	
-	public static TaskGraph buildTestGraphB() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+	public static TaskGraphOld buildTestGraphB() {
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		
-		builder.setGraphName("Graph b");
+		builder.setName("Graph b");
 		
 		builder.addTask("a", 1);
 		builder.addTask("b", 1);
@@ -35,10 +37,10 @@ public class TestGraphUtils {
 		return builder.buildGraph();
 	}
 	
-	public static TaskGraph buildTestGraphC() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
+	public static TaskGraphOld buildTestGraphC() {
+		TaskGraphBuilderOld builder = new TaskGraphBuilderOld();
 		
-		builder.setGraphName("Graph c");
+		builder.setName("Graph c");
 		
 		builder.addTask("a", 3);
 		builder.addTask("b", 1);

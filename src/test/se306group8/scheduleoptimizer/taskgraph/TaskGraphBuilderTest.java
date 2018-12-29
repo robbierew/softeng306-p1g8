@@ -85,7 +85,7 @@ class TaskGraphBuilderTest {
 	
 	@Test
 	void testBottomTime() {
-		TaskGraphOld graph = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld graph = TestGraphUtilsOld.buildTestGraphA();
 		
 		TaskOld a = null, b = null, c = null, d = null;
 		for(TaskOld task : graph.getAll()) {

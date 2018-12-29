@@ -6,7 +6,7 @@ import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 public class TestGreedy {
 	
@@ -18,19 +18,19 @@ public class TestGreedy {
 	
 	@Test
 	public void testGraphA() throws InterruptedException {
-		TaskGraphOld tgA = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld tgA = TestGraphUtilsOld.buildTestGraphA();
 		testGraph(tgA);		
 	}
 	
 	@Test
 	public void testGraphB() throws InterruptedException {
-		TaskGraphOld tgB = TestGraphUtils.buildTestGraphB();
+		TaskGraphOld tgB = TestGraphUtilsOld.buildTestGraphB();
 		testGraph(tgB);		
 	}
 	
 	@Test
 	public void testGraphC() throws InterruptedException {
-		TaskGraphOld tgC = TestGraphUtils.buildTestGraphC();
+		TaskGraphOld tgC = TestGraphUtilsOld.buildTestGraphC();
 		testGraph(tgC);		
 	}
 }

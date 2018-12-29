@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 public class ScheduleArrayTest {
 	private BlockScheduleArray array;
@@ -20,7 +20,7 @@ public class ScheduleArrayTest {
 	
 	@BeforeEach
 	public void setUp() {
-		graph = TestGraphUtils.buildTestGraphA();
+		graph = TestGraphUtilsOld.buildTestGraphA();
 		task = graph.getAll().get(0);
 		
 		parent = new TreeSchedule(graph, s -> 0xff & s.hashCode(), 2);

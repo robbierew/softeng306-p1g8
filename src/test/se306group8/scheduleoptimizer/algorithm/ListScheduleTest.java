@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 class ListScheduleTest {
 	private ListSchedule schedule, scheduleFromList, scheduleFromAllocation;
@@ -27,7 +27,7 @@ class ListScheduleTest {
 	 * The three different variants are used for differing test. For some schedules the requested data is trivial. */
 	@BeforeEach
 	void setUp() {
-		graph = TestGraphUtils.buildTestGraphA();
+		graph = TestGraphUtilsOld.buildTestGraphA();
 		
 		for(TaskOld task : graph.getAll()) {
 			switch(task.getName()) {

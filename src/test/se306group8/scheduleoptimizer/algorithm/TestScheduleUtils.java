@@ -16,11 +16,11 @@ import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 public class TestScheduleUtils {
 	public static Schedule createTestScheduleA() {
-		TaskGraphOld graph = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld graph = TestGraphUtilsOld.buildTestGraphA();
 		
 		//Topological Order
 		List<TaskOld> tasks = new ArrayList<>(graph.getAll());

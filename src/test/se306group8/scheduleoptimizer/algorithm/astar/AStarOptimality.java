@@ -22,7 +22,7 @@ import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
 import se306group8.scheduleoptimizer.dotfile.DOTFileHandlerOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 public class AStarOptimality {
 	
@@ -89,7 +89,7 @@ public class AStarOptimality {
 
     @Test
     void testProduceCompleteScheduleTinyGraph() throws IOException, InterruptedException {
-        TaskGraphOld graph = TestGraphUtils.buildTestGraphA();
+        TaskGraphOld graph = TestGraphUtilsOld.buildTestGraphA();
         Assertions.assertEquals(8, initAlgorithm(2).produceCompleteSchedule(graph, 2).getTotalRuntime());
     }
 

@@ -16,7 +16,7 @@ import java.util.AbstractMap.SimpleEntry;
  */
 public class TaskGraphBuilder {
 		
-	private int nextID;
+	private byte nextID;
 	private Map<SimpleEntry<String, String>, Integer> remoteCostMap;
 	private Map<String, List<String>> parentMap;
 	private Map<String, List<String>> childMap;
@@ -67,6 +67,10 @@ public class TaskGraphBuilder {
 		int[][] remoteCostMatrix = createRemoteCostMatrix(clonedTasks);
 		
 		TaskGraph taskGraph = new TaskGraphImpl(name,ordered,remoteCostMatrix);
+		
+		for (TaskImpl task:clonedTasks) {
+			task.setTaskGraph(taskGraph);
+		}
 		
 		return taskGraph;
 		

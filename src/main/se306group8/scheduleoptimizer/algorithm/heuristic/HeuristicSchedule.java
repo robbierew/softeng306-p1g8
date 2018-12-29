@@ -6,15 +6,30 @@ import se306group8.scheduleoptimizer.taskgraph.Task;
 
 public class HeuristicSchedule extends TreeSchedule{
 
-	public HeuristicSchedule(ProblemStatement statement) {
+	Heuristic heuristic = null;
+	HeuristicAlgorithm algorithm;
+	public HeuristicSchedule(ProblemStatement statement, HeuristicAlgorithm algorithm) {
 		super(statement);
+		this.algorithm = algorithm;
+		heuristic = algorithm.computeHeuristic(this);
 	}
 
 	public HeuristicSchedule(HeuristicSchedule parent,Task nextTask, int processor) {
 		super(parent,nextTask,processor);
+		heuristic = parent.getHeuristicAlgorithm().computeHeuristic(this);
 	}
 	
-	public int getHeuristic() {
-		return 0;//TODO
+	public int getHeuristicValue() {
+		return heuristic.getHeuristicValue();
 	}
+	
+	public Heuristic getHeuristic() {
+		return heuristic;
+	}
+	
+	public HeuristicAlgorithm getHeuristicAlgorithm() {
+		return algorithm;
+	}
+	
+	
 }

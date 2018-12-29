@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 class SchedulePriorityQueueTest {
 	private SchedulePriorityQueue priorityQueue;
@@ -20,7 +20,7 @@ class SchedulePriorityQueueTest {
 	
 	@BeforeEach
 	public void setUp() {
-		graph = TestGraphUtils.buildTestGraphA();
+		graph = TestGraphUtilsOld.buildTestGraphA();
 		task1 = graph.getAll().get(0);
 		task2 = graph.getAll().get(1);
 		

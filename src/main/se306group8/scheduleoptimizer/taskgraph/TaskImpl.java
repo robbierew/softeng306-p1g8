@@ -9,7 +9,7 @@ class TaskImpl implements Task {
 
 	private String name;
 	private int cost;
-	private int id;
+	private byte id;
 	private int mask;
 	private int parentTaskMask;
 	private int childTaskMask;
@@ -33,7 +33,7 @@ class TaskImpl implements Task {
 	}
 
 	@Override
-	public int getID() {
+	public byte getID() {
 		return id;
 	}
 
@@ -77,7 +77,7 @@ class TaskImpl implements Task {
 		this.name = name;
 	}
 	
-	void setID(int id) {
+	void setID(byte id) {
 		this.id = id;
 		
 		//the mask is 2^id

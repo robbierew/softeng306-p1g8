@@ -1,10 +1,13 @@
 package se306group8.scheduleoptimizer.schedule;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import se306group8.scheduleoptimizer.schedule.taskallocation.AllocationHistory;
+import se306group8.scheduleoptimizer.schedule.taskallocation.TaskAllocation;
 import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
@@ -15,17 +18,20 @@ public class TreeSchedule extends ScheduleValidator{
 	private int allocatedMask;
 	private int allocatableMask;
 	private int runtime;
-	private TaskAllocation[] allocationTaskMap;
+
+	
+	//these variables are lazy loaded please use there getters to ensure it has a value
+	//there value are calculated from their mask
 	private List<Task> allocatedTasks;
 	private Collection<Task> allocatableTasks;
-	private List<TaskAllocation>[] allocationProcessorMap;
+	///////////////////////////////////////////
+	
 	
 	private TreeSchedule parent;
+	private AllocationHistory allocHistory;
 	
 	//empty schedule constructor
-	@SuppressWarnings("unchecked")
 	public TreeSchedule(ProblemStatement statement) {
-		int arraySize = statement.getNumTasks();
 		
 		this.statement = statement;
 		
@@ -34,47 +40,56 @@ public class TreeSchedule extends ScheduleValidator{
 		
 		allocatableMask = statement.getRootMask();
 		
-		allocationTaskMap = new TaskAllocation[arraySize];
+		allocHistory = new AllocationHistory(statement);
 		
 		allocatedTasks = new ArrayList<Task>();
-		allocatableTasks = new ArrayList<Task>();
-		
-		//Java has stupid generics rules
-		allocationProcessorMap = new ArrayList[arraySize];
-		for (int i=0;i<arraySize;i++) {
-			allocationProcessorMap[i] = new ArrayList<TaskAllocation>();
-		}
+		allocatableTasks = new ArrayList<Task>();		
 		
 		parent = null;
 	}
 	
+
 	public TreeSchedule(TreeSchedule parent,Task nextTask, int processor) {
-		//throws an exception if invalid
-		TaskAllocation nextAlloc = makeValidAllocation(nextTask,processor);
 		
 		statement = parent.getProblemStatement();
-		allocatedMask = parent.getAllocatableMask() | nextTask.getMask();
+
+		//throws an exception if invalid
+		TaskAllocation lastAlloc = makeValidAllocation(parent,nextTask,processor);
 		
-		runtime = Math.max(parent.getRuntime(), nextAlloc.getEndTime());
+		allocatedMask = parent.getAllocatedMask() | nextTask.getMask();
 		
-		//remove the previous task from the list
+		runtime = Math.max(parent.getRuntime(), lastAlloc.getEndTime());
+		
+		// remove the previous task from the list
 		allocatableMask = parent.getAllocatableMask() & ~nextTask.getMask();
-		
-		for (Task child:nextTask.getChildTasks()) {
-			//this bitwise if statement checks to see if all the child's parents are allocated
-			if (~(allocatedMask | ~child.getParentTaskMask()) == 0){
+
+		for (Task child : nextTask.getChildTasks()) {
+			// this bitwise if statement checks to see if all the child's parents are
+			// allocated
+			if (~(allocatedMask | ~child.getParentTaskMask()) == 0) {
 				allocatableMask |= child.getMask();
 			}
 		}
-		
-		//add the next allocation to the map
-		allocationTaskMap = parent.allocationTaskMap; 
-		allocationTaskMap[nextTask.getID()] = nextAlloc;
-		
-		allocatedTasks = getTaskListFromMask(allocatedMask);
-		allocatableTasks = getTaskListFromMask(allocatableMask);
+				
+		allocHistory = parent.allocHistory.fork(lastAlloc);
 		
 		this.parent = parent;
+	}
+	
+
+	//if this returns null then you have root
+	public TreeSchedule getParent() {
+		return parent;
+	}
+	
+	//if this returns null then you have root
+	public TaskAllocation getLastAllocation() {
+		return allocHistory.getLastAllocation();
+	}
+	
+	//if this returns null then you have root
+	public Task getLastAllocatedTask() {
+		return allocHistory.getLastAllocatedTask();
 	}
 
 	@Override
@@ -89,7 +104,13 @@ public class TreeSchedule extends ScheduleValidator{
 
 	@Override
 	public List<Task> getAllocatedTasks() {
-		return new ArrayList<Task>(allocatedTasks);
+		
+		//lazy load
+		if (allocatedTasks == null) {
+			allocatedTasks = getTaskListFromMask(allocatedMask);
+		}
+		
+		return Collections.unmodifiableList(allocatedTasks);
 	}
 
 	@Override
@@ -99,16 +120,17 @@ public class TreeSchedule extends ScheduleValidator{
 
 	@Override
 	public List<TaskAllocation> getAllocations() {
-		ArrayList<TaskAllocation> result = new ArrayList<TaskAllocation>();
-		for (List<TaskAllocation> allocations:allocationProcessorMap) {
-			result.addAll(allocations);
-		}
-		return result;
+		return allocHistory.getAllocationsAsList();
 	}
 
 	@Override
 	public Collection<Task> getAllocatableTasks() {
-		return new ArrayList<Task>(allocatableTasks);
+		
+		//lazy load
+		if (allocatableTasks == null) {
+			allocatableTasks = getTaskListFromMask(allocatableMask);
+		}
+		return Collections.unmodifiableCollection(allocatableTasks);
 	}
 
 	@Override
@@ -118,15 +140,18 @@ public class TreeSchedule extends ScheduleValidator{
 
 	@Override
 	protected List<TaskAllocation> getAllocationsForProcessorImpl(int processor) {
-		return allocationProcessorMap[processor];
+		return allocHistory.getAllocationsForProcessorAsList(processor);
 	}
 
 	@Override
 	protected TaskAllocation getAllocationForTaskImpl(Task task) {
-		return allocationTaskMap[task.getID()];
+		return allocHistory.getAllocationForTask(task);
 	}
 
-	public TreeSchedule getParent() {
-		return parent;
+
+	@Override
+	protected TaskAllocation getLastAllocationForProcessorImpl(int processor) {
+		return allocHistory.getLastAllocationForProcessor(processor);
 	}
+
 }

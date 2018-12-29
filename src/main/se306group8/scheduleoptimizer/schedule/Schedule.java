@@ -3,6 +3,7 @@ package se306group8.scheduleoptimizer.schedule;
 import java.util.Collection;
 import java.util.List;
 
+import se306group8.scheduleoptimizer.schedule.taskallocation.TaskAllocation;
 import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
@@ -13,10 +14,7 @@ public interface Schedule {
 	
 	public List<TaskAllocation> getAllocationsForProcessor(int processor);
 	
-	default public TaskAllocation getLastAllocationOnProcessor(int processor) {
-		List<TaskAllocation> allocation = getAllocationsForProcessor(processor);
-		return allocation.get(allocation.size()-1);
-	}
+	public TaskAllocation getLastAllocationForProcessor(int processor) ;
 	
 	public int getRuntime();
 	

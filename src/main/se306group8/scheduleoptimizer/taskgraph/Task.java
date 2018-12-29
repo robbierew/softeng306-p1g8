@@ -8,7 +8,7 @@ public interface Task {
 	
 	public int getComputeCost();
 	
-	public int getID();
+	public byte getID();
 	public int getMask();
 	
 	public int getParentTaskMask();

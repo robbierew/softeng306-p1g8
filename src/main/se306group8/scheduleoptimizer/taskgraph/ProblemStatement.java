@@ -5,11 +5,11 @@ import java.util.List;
 public class ProblemStatement implements TaskGraph{
 
 	TaskGraph graph;
-	int numProcessors;
+	byte numProcessors;
 	
 	public ProblemStatement(TaskGraph graph, int numProcessors) {
 		this.graph = graph;
-		this.numProcessors = numProcessors;
+		this.numProcessors = (byte) numProcessors;
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class ProblemStatement implements TaskGraph{
 		return graph.isTaskFromGraph(check);
 	}
 	
-	public int getNumProcessors() {
+	public byte getNumProcessors() {
 		return numProcessors;
 	}
 

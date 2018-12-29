@@ -15,7 +15,7 @@ import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFin
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 public class MinimumHeuristicTest {
 	private static final int PROCESSOR = 2;
@@ -28,7 +28,7 @@ public class MinimumHeuristicTest {
 	
 	/** Makes sure that the given heuristic is actually an underestimate. */
 	public void testEstimate(MinimumHeuristic heuristic) {
-		TaskGraphOld graph = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld graph = TestGraphUtilsOld.buildTestGraphA();
 		
 		TreeSchedule root = new TreeSchedule(graph, heuristic, 2);
 		getCompleteList(root, heuristic);

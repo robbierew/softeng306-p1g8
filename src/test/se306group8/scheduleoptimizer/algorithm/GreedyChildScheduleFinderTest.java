@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.taskgraph.TaskOld;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,7 +15,7 @@ public class GreedyChildScheduleFinderTest {
 
 	@Test
 	public void TestGraphCWithRoot() {
-		TaskGraphOld tg1 = TestGraphUtils.buildTestGraphC();
+		TaskGraphOld tg1 = TestGraphUtilsOld.buildTestGraphC();
 		TaskOld firstTask = tg1.getAll().get(0);
 		
 		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0, 2);
@@ -39,7 +39,7 @@ public class GreedyChildScheduleFinderTest {
 	
 	@Test
 	public void TestGraphAWithRoot() {
-		TaskGraphOld tg1 = TestGraphUtils.buildTestGraphA();
+		TaskGraphOld tg1 = TestGraphUtilsOld.buildTestGraphA();
 		TaskOld firstTask = tg1.getAll().get(0);
 		
 		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0, 2);
@@ -55,7 +55,7 @@ public class GreedyChildScheduleFinderTest {
 	
 	@Test
 	public void TestGraphBWithRoot() {
-		TaskGraphOld tg1 = TestGraphUtils.buildTestGraphB();
+		TaskGraphOld tg1 = TestGraphUtilsOld.buildTestGraphB();
 		TaskOld firstTask = tg1.getAll().get(0);
 		
 		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0, 2);

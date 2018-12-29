@@ -14,7 +14,7 @@ import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilderOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 /** Tests the DOT file IO by reading and writing several files from disk. The writer is checked by reading the file back in. */
 class DOTFileHandlerTest {
@@ -26,7 +26,7 @@ class DOTFileHandlerTest {
 		DOTFileHandlerOld handler = new DOTFileHandlerOld();
 		TaskGraphOld graph = handler.readTaskGraph(path);
 		
-		Assertions.assertEquals(graph, TestGraphUtils.buildTestGraphA());
+		Assertions.assertEquals(graph, TestGraphUtilsOld.buildTestGraphA());
 	}
 	
 	@Test
@@ -34,7 +34,7 @@ class DOTFileHandlerTest {
 		Path path = Paths.get("res", "test", "testgraphs", "graph_with_coverage.dot");
 		
 		DOTFileHandlerOld handler = new DOTFileHandlerOld();
-		Assertions.assertEquals(handler.readTaskGraph(path), TestGraphUtils.buildTestGraphA());
+		Assertions.assertEquals(handler.readTaskGraph(path), TestGraphUtilsOld.buildTestGraphA());
 	}
 
 	@Test

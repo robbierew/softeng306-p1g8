@@ -8,6 +8,7 @@ import se306group8.scheduleoptimizer.taskgraph.Task;
 
 public class AllocationHistory {
 	
+	ProblemStatement statement;
 	TaskAllocation[] allocations;
 	byte numAllocations;
 	
@@ -18,6 +19,7 @@ public class AllocationHistory {
 	
 	
 	public AllocationHistory(ProblemStatement ps) {
+		statement = ps;
 		byte numTasks = ps.getNumTasks();
 		byte numProcessors = ps.getNumProcessors();
 		
@@ -26,6 +28,7 @@ public class AllocationHistory {
 		numAllocsOnProcessor = new byte[numProcessors];
 		
 		taskAlloc = new byte[numTasks];
+		Arrays.fill(taskAlloc, (byte)-1);
 		
 	}
 	
@@ -34,6 +37,7 @@ public class AllocationHistory {
 		numAllocations = clone.numAllocations;
 		taskAlloc = clone.taskAlloc.clone();
 		numAllocsOnProcessor = clone.numAllocsOnProcessor.clone();
+		statement = clone.statement;
 		
 		
 		byte numProcessors = (byte) numAllocsOnProcessor.length;
@@ -50,6 +54,20 @@ public class AllocationHistory {
 		AllocationHistory copy = new AllocationHistory(this);
 		copy.addAllocation(alloc);
 		return copy;
+	}
+	
+	public AllocationHistory previous() {
+		AllocationHistory parent = new AllocationHistory(this);
+		TaskAllocation last = getLastAllocation();
+		
+		//we only have to reduce the num of allocations to hide last allocation
+		parent.numAllocations--;
+		parent.taskAlloc[last.getTask().getID()] = -1;
+		
+		//we only have to reduce the num of allocations to hide last allocation
+		parent.numAllocsOnProcessor[last.getProcessor()-1]--;
+		
+		return parent;
 	}
 	
 	public List<TaskAllocation> getAllocationsForProcessorAsList(int processor){
@@ -75,12 +93,18 @@ public class AllocationHistory {
 	}
 	
 	public TaskAllocation getLastAllocation() {
+		if (numAllocations == 0) {
+			return null;
+		}
 		return allocations[numAllocations - 1];
 	}
 	
 	public TaskAllocation getLastAllocationForProcessor(int processor) {
 		processor--;
-		byte index = processorAllocations[processor][numAllocsOnProcessor[processor]];
+		if (numAllocsOnProcessor[processor] == 0) {
+			return null;
+		}
+		byte index = processorAllocations[processor][numAllocsOnProcessor[processor] -1];
 		return allocations[index];
 	}
 	
@@ -90,6 +114,10 @@ public class AllocationHistory {
 			return null;
 		}		
 		return getLastAllocation().getTask();
+	}
+	
+	public ProblemStatement getStatement() {
+		return statement;
 	}
 	
 	//package private as this class should be immutable use builder class

@@ -24,10 +24,10 @@ public class TreeSchedule extends ScheduleValidator{
 	//there value are calculated from their mask
 	private List<Task> allocatedTasks;
 	private Collection<Task> allocatableTasks;
+	private TreeSchedule parent;
 	///////////////////////////////////////////
 	
 	
-	private TreeSchedule parent;
 	private AllocationHistory allocHistory;
 	
 	//empty schedule constructor
@@ -43,7 +43,7 @@ public class TreeSchedule extends ScheduleValidator{
 		allocHistory = new AllocationHistory(statement);
 		
 		allocatedTasks = new ArrayList<Task>();
-		allocatableTasks = new ArrayList<Task>();		
+		allocatableTasks = statement.getRoots();		
 		
 		parent = null;
 	}
@@ -56,29 +56,59 @@ public class TreeSchedule extends ScheduleValidator{
 		//throws an exception if invalid
 		TaskAllocation lastAlloc = makeValidAllocation(parent,nextTask,processor);
 		
-		allocatedMask = parent.getAllocatedMask() | nextTask.getMask();
+		allocatedMask = parent.getAllocatedMask();
 		
 		runtime = Math.max(parent.getRuntime(), lastAlloc.getEndTime());
 		
-		// remove the previous task from the list
-		allocatableMask = parent.getAllocatableMask() & ~nextTask.getMask();
-
-		for (Task child : nextTask.getChildTasks()) {
-			// this bitwise if statement checks to see if all the child's parents are
-			// allocated
-			if (~(allocatedMask | ~child.getParentTaskMask()) == 0) {
-				allocatableMask |= child.getMask();
-			}
-		}
+		allocatableMask = parent.getAllocatableMask();
+		
+		updateMasksWithNextTask(nextTask);
 				
 		allocHistory = parent.allocHistory.fork(lastAlloc);
 		
 		this.parent = parent;
 	}
 	
+	public TreeSchedule(AllocationHistory history) {
+		this(history,false);
+	}
+
+	protected TreeSchedule(AllocationHistory history, boolean safeHistory) {
+		
+		//init values before adding the TaskAllocations
+		statement = history.getStatement();
+		allocatedMask = 0;
+		allocatableMask = statement.getRootMask();
+		runtime = 0;
+		
+		TaskAllocation[] allocations = history.getAllocationsAsArray();
+		for (TaskAllocation alloc: allocations) {
+			if (!safeHistory) {
+				
+				//throws an exception if false
+				checkAllocationValid(alloc.getTask(),alloc.getProcessor());
+			}
+			
+			updateMasksWithNextTask(alloc.getTask());
+			
+			runtime = Math.max(runtime, alloc.getEndTime());
+			
+		}
+		
+		allocHistory = history;
+		
+	}
+
+	public AllocationHistory getAllocationHistory() {
+		return allocHistory;
+	}
 
 	//if this returns null then you have root
 	public TreeSchedule getParent() {
+		if (parent == null && !isEmpty()) {
+			parent = new TreeSchedule(allocHistory.previous());
+		}
+		
 		return parent;
 	}
 	
@@ -152,6 +182,19 @@ public class TreeSchedule extends ScheduleValidator{
 	@Override
 	protected TaskAllocation getLastAllocationForProcessorImpl(int processor) {
 		return allocHistory.getLastAllocationForProcessor(processor);
+	}
+	
+	private void updateMasksWithNextTask(Task nextTask) {
+		// remove the previous task from the list
+		allocatableMask &= ~nextTask.getMask();
+		allocatedMask |= nextTask.getMask();
+		for (Task child : nextTask.getChildTasks()) {
+			// this bitwise if statement checks to see if all the child's parents are
+			// allocated
+			if (~(allocatedMask | ~child.getParentTaskMask()) == 0) {
+				allocatableMask |= child.getMask();
+			}
+		}
 	}
 
 }

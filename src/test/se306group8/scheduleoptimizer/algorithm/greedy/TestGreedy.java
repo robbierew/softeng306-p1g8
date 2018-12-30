@@ -1,36 +1,31 @@
 package se306group8.scheduleoptimizer.algorithm.greedy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
-import se306group8.scheduleoptimizer.algorithm.Algorithm;
-import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
-import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
+import se306group8.scheduleoptimizer.schedule.TreeSchedule;
+import se306group8.scheduleoptimizer.schedule.TreeScheduleBuilder;
+import se306group8.scheduleoptimizer.schedule.TreeScheduleBuilderImpl;
+import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class TestGreedy {
 	
-	private void testGraph(TaskGraphOld graph) throws InterruptedException {
-		Algorithm greedy = new GreedySchedulingAlgorithm();
-		Schedule s1 = greedy.produceCompleteSchedule(graph, 2);
-		TestScheduleUtils.checkValidity(s1,2);
-	}
 	
 	@Test
-	public void testGraphA() throws InterruptedException {
-		TaskGraphOld tgA = TestGraphUtilsOld.buildTestGraphA();
-		testGraph(tgA);		
-	}
-	
-	@Test
-	public void testGraphB() throws InterruptedException {
-		TaskGraphOld tgB = TestGraphUtilsOld.buildTestGraphB();
-		testGraph(tgB);		
-	}
-	
-	@Test
-	public void testGraphC() throws InterruptedException {
-		TaskGraphOld tgC = TestGraphUtilsOld.buildTestGraphC();
-		testGraph(tgC);		
+	public void testConstructA() {
+		TaskGraph a = TestGraphUtils.buildTestGraphA();
+		ProblemStatement pS = new ProblemStatement(a,2);
+		
+		TreeScheduleBuilder<TreeSchedule> builder = new TreeScheduleBuilderImpl();
+		GreedyScheduleBuilder<TreeSchedule> greedyBuild = new GreedyScheduleBuilder<TreeSchedule>(builder);
+		
+		TreeSchedule greedy = greedyBuild.makeGreedyFromStatement(pS);
+		
+		assertEquals(0b1111,greedy.getAllocatedMask());
+		assertEquals(9,greedy.getRuntime());
+		
 	}
 }

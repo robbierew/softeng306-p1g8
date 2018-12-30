@@ -59,6 +59,10 @@ public abstract class ScheduleValidator implements Schedule{
 		
 	}
 	
+	protected void checkAllocationValid(Task task, int processor) {
+		checkAllocationValid(this, task,processor);
+	}
+	
 	protected TaskAllocation makeValidAllocation(Schedule schedule, Task task, int processor) {
 		checkAllocationValid(schedule, task, processor);
 

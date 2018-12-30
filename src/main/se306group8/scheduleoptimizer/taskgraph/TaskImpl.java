@@ -16,12 +16,12 @@ class TaskImpl implements Task {
 	private List<Task> parents;
 	private List<Task> children;
 	private TaskGraph taskGraph;
-	
+
 	@Override
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getName();
@@ -61,29 +61,29 @@ class TaskImpl implements Task {
 	public List<Task> getChildTasks() {
 		return Collections.unmodifiableList(children);
 	}
-	
+
 	@Override
 	public TaskGraph getTaskGraph() {
 		return taskGraph;
 	}
-	
-	//package private setters
-	
+
+	// package private setters
+
 	void setTaskGraph(TaskGraph graph) {
 		taskGraph = graph;
 	}
-	
+
 	void setName(String name) {
 		this.name = name;
 	}
-	
+
 	void setID(byte id) {
 		this.id = id;
-		
-		//the mask is 2^id
-		mask = 1 << id; 
+
+		// the mask is 2^id
+		mask = 1 << id;
 	}
-	
+
 	void computeRelationMasks() {
 		// compute the parent mask
 		parentTaskMask = 0;
@@ -92,7 +92,7 @@ class TaskImpl implements Task {
 			// bitwise or
 			parentTaskMask |= t.getMask();
 		}
-		
+
 		// compute the child mask
 		childTaskMask = 0;
 		for (Task t : children) {
@@ -101,13 +101,12 @@ class TaskImpl implements Task {
 			childTaskMask |= t.getMask();
 		}
 	}
-	
+
 	void setParentTasks(Collection<? extends Task> parents) {
-		
-		//copy the parent tasks into own list
+
+		// copy the parent tasks into own list
 		this.parents = new ArrayList<Task>(parents);
-		
-		
+
 	}
 
 	void setChildTasks(Collection<? extends Task> children) {
@@ -120,5 +119,5 @@ class TaskImpl implements Task {
 	void setCost(int cost) {
 		this.cost = cost;
 	}
-	
+
 }

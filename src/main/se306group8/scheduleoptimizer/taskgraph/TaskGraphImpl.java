@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class TaskGraphImpl implements TaskGraph{
+class TaskGraphImpl implements TaskGraph {
 
 	private String name;
 	private List<Task> tasks;
 	private int[][] costMatrix;
 	private List<Task> roots;
 	private int rootMask;
-	
+
 	public TaskGraphImpl(String name, List<Task> ordered, int[][] remoteCostMatrix) {
 		this.name = name;
 		tasks = Collections.unmodifiableList(ordered);
@@ -39,14 +39,14 @@ class TaskGraphImpl implements TaskGraph{
 		if ((parent.getChildTaskMask() & child.getMask()) == 0) {
 			throw new RuntimeException("Tasks are not in parent child relation");
 		}
-		
+
 		return costMatrix[parent.getID()][child.getID()];
 	}
-	
-	private List<Task> computeRoots(List<Task> tasks){
+
+	private List<Task> computeRoots(List<Task> tasks) {
 		List<Task> calcRoots = new ArrayList<Task>();
 		rootMask = 0;
-		for (Task t:tasks) {
+		for (Task t : tasks) {
 			if (t.getParentTaskMask() == 0) {
 				calcRoots.add(t);
 				rootMask |= t.getMask();

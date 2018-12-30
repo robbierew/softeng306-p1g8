@@ -5,13 +5,14 @@ import se306group8.scheduleoptimizer.schedule.taskallocation.AllocationHistory;
 import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
-public class HeuristicScheduleBuilder implements TreeScheduleBuilder<HeuristicSchedule>{
+public class HeuristicScheduleBuilder implements TreeScheduleBuilder<HeuristicSchedule> {
 
 	HeuristicAlgorithm algorithm;
+
 	public HeuristicScheduleBuilder(HeuristicAlgorithm algorithm) {
 		this.algorithm = algorithm;
 	}
-	
+
 	@Override
 	public HeuristicSchedule buildRootSchedule(ProblemStatement pS) {
 		return new HeuristicSchedule(pS, algorithm);
@@ -19,12 +20,12 @@ public class HeuristicScheduleBuilder implements TreeScheduleBuilder<HeuristicSc
 
 	@Override
 	public HeuristicSchedule buildChildSchedule(HeuristicSchedule parent, Task nextTask, int processor) {
-		return new HeuristicSchedule(parent,nextTask,processor);
+		return new HeuristicSchedule(parent, nextTask, processor);
 	}
 
 	@Override
 	public HeuristicSchedule buildFromHistory(AllocationHistory history) {
-		return new HeuristicSchedule(history,algorithm);
+		return new HeuristicSchedule(history, algorithm);
 	}
-	
+
 }

@@ -1,6 +1,7 @@
 package se306group8.scheduleoptimizer.algorithm.heuristic;
 
-//should this be an interface?
-public abstract class HeuristicAlgorithm {
-	public abstract Heuristic computeHeuristic(HeuristicSchedule schedule);
+public interface HeuristicAlgorithm {
+	public Heuristic computeHeuristic(HeuristicSchedule schedule);
+	public Heuristic computeHeuristic(HeuristicSchedule schedule, Object metadata);
+	
 }

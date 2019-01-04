@@ -5,7 +5,7 @@ import java.util.List;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinderOld;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
@@ -16,19 +16,19 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
  */
 public class BranchBoundSchedulingAlgorithm extends Algorithm {
   
-	private final ChildScheduleFinder finder;
+	private final ChildScheduleFinderOld finder;
 	private final MinimumHeuristic heuristic;
 	
 	private long visited = 0;
 	
-	public BranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+	public BranchBoundSchedulingAlgorithm(ChildScheduleFinderOld finder, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
 		super(monitor);
 		
 		this.finder = finder;
 		this.heuristic = heuristic;
 	}
 
-	public BranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic) {
+	public BranchBoundSchedulingAlgorithm(ChildScheduleFinderOld finder, MinimumHeuristic heuristic) {
 		super();
 		
 		this.finder = finder;

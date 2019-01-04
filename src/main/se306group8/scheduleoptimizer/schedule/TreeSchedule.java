@@ -70,7 +70,9 @@ public class TreeSchedule extends ScheduleValidator {
 		this(history, false);
 	}
 
-	protected TreeSchedule(AllocationHistory history, boolean safeHistory) {
+	//should not be used with safeHistory false unless your trust the source
+	//This skips the safety checks for performance of testing reasons when safeHistory is true
+	public TreeSchedule(AllocationHistory history, boolean safeHistory) {
 
 		// init values before adding the TaskAllocations
 		statement = history.getStatement();
@@ -179,6 +181,11 @@ public class TreeSchedule extends ScheduleValidator {
 	protected TaskAllocation getLastAllocationForProcessorImpl(int processor) {
 		return allocHistory.getLastAllocationForProcessor(processor);
 	}
+	
+	@Override
+	protected TaskAllocation getFirstAllocationForProcessorImpl(int processor) {
+		return allocHistory.getFirstAllocationForProcessor(processor);
+	}
 
 	private void updateMasksWithNextTask(Task nextTask) {
 		// remove the previous task from the list
@@ -192,5 +199,7 @@ public class TreeSchedule extends ScheduleValidator {
 			}
 		}
 	}
+
+
 
 }

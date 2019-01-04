@@ -11,19 +11,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
-import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinderOld;
+import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinderOld;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
 
 public class MinimumHeuristicTest {
 	private static final int PROCESSOR = 2;
-	private ChildScheduleFinder childFinder;
+	private ChildScheduleFinderOld childFinder;
 	
 	@BeforeEach
 	public void createChildFinder() {
-		childFinder = new BasicChildScheduleFinder(PROCESSOR);
+		childFinder = new BasicChildScheduleFinderOld(PROCESSOR);
 	}
 	
 	/** Makes sure that the given heuristic is actually an underestimate. */

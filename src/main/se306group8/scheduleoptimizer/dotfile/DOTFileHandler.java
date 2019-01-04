@@ -18,8 +18,13 @@ import java.util.TreeMap;
 
 import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.dotfile.Token.Type;
+import se306group8.scheduleoptimizer.schedule.Schedule;
+import se306group8.scheduleoptimizer.schedule.TreeSchedule;
+import se306group8.scheduleoptimizer.schedule.taskallocation.AllocationHistory;
+import se306group8.scheduleoptimizer.schedule.taskallocation.AllocationHistoryBuilder;
+import se306group8.scheduleoptimizer.schedule.taskallocation.TaskAllocation;
 import se306group8.scheduleoptimizer.taskgraph.DependencyOld;
-import se306group8.scheduleoptimizer.taskgraph.Schedule;
+import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
@@ -56,41 +61,54 @@ public class DOTFileHandler {
 		return builder.buildGraph();
 	}
 
-//	/**
-//	 * Reads a .dot file from the disk.
-//	 * 
-//	 * @param path The path to find the file at. It must not be null.
-//	 * @return The parsed Schedule, it will not be null.
-//	 * @throws IOException If the file cannot be read, or the file is not in the format prescribed in class.
-//	 */
-//	public Schedule readSchedule(Path path) throws IOException {
-//		TaskGraphBuilder builder = new TaskGraphBuilder();
-//		TreeMap<Integer, TreeMap<Integer, String>> processorMapping = new TreeMap<>();
-//		
-//		//Read populates the processorMapping and the builder
-//		read(path, builder, processorMapping);
-//		
-//		TaskGraph graph = builder.buildGraph();
-//		HashMap<String, Task> taskMapping = new HashMap<>();
-//		
-//		//Assign each name to a task
-//		for(Task t : graph.getAll()) {
-//			taskMapping.put(t.getName(), t);
-//		}
-//		
-//		List<List<Task>> processorAllocation = new ArrayList<>();
-//		
-//		for(TreeMap<Integer, String> map : processorMapping.values()) {
-//			ArrayList<Task> list = new ArrayList<>();
-//			processorAllocation.add(list);
-//			
-//			for(String taskName : map.values()) {
-//				list.add(taskMapping.get(taskName));
-//			}
-//		}
-//		
-//		return new ListSchedule(graph, processorAllocation);
-//	}
+	/**
+	 * Reads a .dot file from the disk.
+	 * 
+	 * @param path The path to find the file at. It must not be null.
+	 * @return The parsed Schedule, it will not be null.
+	 * @throws IOException If the file cannot be read, or the file is not in the format prescribed in class.
+	 */
+	public Schedule readSchedule(Path path) throws IOException {
+		TaskGraphBuilder builder = new TaskGraphBuilder();
+		TreeMap<Integer, TreeMap<Integer, String>> processorMapping = new TreeMap<>();
+		
+		//Read populates the processorMapping and the builder
+		read(path, builder, processorMapping);
+		
+		TaskGraph graph = builder.buildGraph();
+		HashMap<String, Task> taskMapping = new HashMap<>();
+		
+		//Assign each name to a task
+		for(Task t : graph.getTasksInParitalOrder()) {
+			taskMapping.put(t.getName(), t);
+		}
+		
+		//List<List<Task>> processorAllocation = new ArrayList<>();
+		
+		List<TaskAllocation> allocs = new ArrayList<TaskAllocation>();
+		int numProcessors = 0;
+		
+		for(TreeMap<Integer, String> map : processorMapping.values()) {
+			//ArrayList<Task> list = new ArrayList<>();
+			//processorAllocation.add(list);
+			
+			numProcessors++;
+			
+			
+			for(Integer starttime : map.keySet()) {
+				allocs.add(new TaskAllocation(taskMapping.get(map.get(starttime)),starttime,numProcessors));
+			}
+		}
+		
+		ProblemStatement statement = new ProblemStatement(graph,numProcessors);
+		AllocationHistoryBuilder historyBuilder = new AllocationHistoryBuilder(statement);
+		
+		for (TaskAllocation alloc: allocs) {
+			historyBuilder.addAllocation(alloc);
+		}
+		
+		return new TreeSchedule(historyBuilder.build(),true);
+	}
 	
 	/**
 	 * Internal method to read a dot file from a map into a designated builder.

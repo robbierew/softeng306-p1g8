@@ -102,7 +102,22 @@ public class AllocationHistory {
 		if (numAllocsOnProcessor[processor] == 0) {
 			return null;
 		}
-		byte index = processorAllocations[processor][numAllocsOnProcessor[processor] - 1];
+		return getNthAllocationForProcessor(processor + 1,numAllocsOnProcessor[processor]);
+	}
+	
+	public TaskAllocation getFirstAllocationForProcessor(int processor) {
+		processor--;
+		if (numAllocsOnProcessor[processor] == 0) {
+			return null;
+		}
+		return getNthAllocationForProcessor(processor + 1,1);
+	}
+	
+	
+	private TaskAllocation getNthAllocationForProcessor(int processor, int n) {
+		processor--;
+		n--;
+		byte index = processorAllocations[processor][n];
 		return allocations[index];
 	}
 

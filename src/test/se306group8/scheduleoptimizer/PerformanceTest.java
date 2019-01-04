@@ -31,8 +31,8 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.astar.AStarSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.branchbound.BranchBoundSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.branchbound.ParallelBranchBoundSchedulingAlgorithm;
-import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
-import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinderOld;
+import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinderOld;
 import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
@@ -53,12 +53,12 @@ public class PerformanceTest {
 	private static final Map<String, Predicate<String>> DIFFICULTIES = new HashMap<>();
 	private static final Map<String, AlgorithmConstructor> ALGORITHMS = new HashMap<>();
 	private static final Map<String, IntFunction<MinimumHeuristic>> HEURISTICS = new HashMap<>();
-	private static final Map<String, IntFunction<ChildScheduleFinder>> CHILD_FINDER = new HashMap<>();
+	private static final Map<String, IntFunction<ChildScheduleFinderOld>> CHILD_FINDER = new HashMap<>();
 	private static final Map<String, Supplier<ScheduleStorage>> STORAGE = new HashMap<>();
 
 	@FunctionalInterface
 	private static interface AlgorithmConstructor {
-		Algorithm construct(MinimumHeuristic heuristic, ChildScheduleFinder finder, RuntimeMonitor monitor, ScheduleStorage storage);
+		Algorithm construct(MinimumHeuristic heuristic, ChildScheduleFinderOld finder, RuntimeMonitor monitor, ScheduleStorage storage);
 	}
 
 	//Set up the various testing options.
@@ -76,7 +76,7 @@ public class PerformanceTest {
 		HEURISTICS.put("CRITICAL_PATH", processors -> new CriticalPathHeuristic());
 		HEURISTICS.put("DATA_READY_TIME", DataReadyTimeHeuristic::new);
 
-		CHILD_FINDER.put("BASIC", BasicChildScheduleFinder::new);
+		CHILD_FINDER.put("BASIC", BasicChildScheduleFinderOld::new);
 		CHILD_FINDER.put("GREEDY", GreedyChildScheduleFinder::new);
 		CHILD_FINDER.put("DUPLICATE_REMOVING", DuplicateRemovingChildFinder::new);
 
@@ -128,7 +128,7 @@ public class PerformanceTest {
 		System.out.println("Starting test '" + fileName + "'");
 
 		Predicate<String> inputFilter = DIFFICULTIES.get(difficulty);
-		IntFunction<ChildScheduleFinder> childScheduleBuilder = CHILD_FINDER.get(childFinder);
+		IntFunction<ChildScheduleFinderOld> childScheduleBuilder = CHILD_FINDER.get(childFinder);
 		AlgorithmConstructor algorithmConstructor = ALGORITHMS.get(algorithm);
 		Supplier<ScheduleStorage> storageSupplier = STORAGE.get(storage);
 
@@ -255,7 +255,7 @@ public class PerformanceTest {
 
 				//Create the algorithm objects
 				MinimumHeuristic heuristic = heuristicBuilder.apply(processors);
-				ChildScheduleFinder child = childScheduleBuilder.apply(processors);
+				ChildScheduleFinderOld child = childScheduleBuilder.apply(processors);
 				ScheduleStorage scheduleStorage = storageSupplier.get();
 				Algorithm alg = algorithmConstructor.construct(heuristic, child, monitor, scheduleStorage);
 

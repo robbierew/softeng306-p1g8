@@ -5,7 +5,7 @@ import java.util.List;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinderOld;
 import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
@@ -22,7 +22,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
  */
 public class AStarSchedulingAlgorithm extends Algorithm {
 	
-	private final ChildScheduleFinder childGenerator;
+	private final ChildScheduleFinderOld childGenerator;
 	private final MinimumHeuristic heuristic;
 	private ScheduleStorage queue;
 	private long explored = 0;
@@ -30,7 +30,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	private TreeSchedule dfsBest;
 	private long maxQueueSize;
 	
-	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor, ScheduleStorage storage) {
+	public AStarSchedulingAlgorithm(ChildScheduleFinderOld childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor, ScheduleStorage storage) {
 		super(monitor);
 		
 		this.childGenerator = childGenerator;
@@ -38,14 +38,14 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		this.queue = storage;
 	}
 
-	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+	public AStarSchedulingAlgorithm(ChildScheduleFinderOld childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
 		super(monitor);
 		
 		this.childGenerator = childGenerator;
 		this.heuristic = heuristic;
 	}
 
-	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic) {
+	public AStarSchedulingAlgorithm(ChildScheduleFinderOld childGenerator, MinimumHeuristic heuristic) {
 		super();
 		
 		this.childGenerator = childGenerator;

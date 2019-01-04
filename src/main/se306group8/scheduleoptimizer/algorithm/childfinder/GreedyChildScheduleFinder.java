@@ -12,7 +12,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskOld;
  * on the Task's bottom level. For children of the same Task they are ordered by
  * starting time of the new Task.
  */
-public class GreedyChildScheduleFinder implements ChildScheduleFinder {
+public class GreedyChildScheduleFinder implements ChildScheduleFinderOld {
 
 	private int numProcessors;
 

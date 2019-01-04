@@ -3,44 +3,34 @@ package se306group8.scheduleoptimizer.algorithm.childfinder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
-
-import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskOld;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
+import se306group8.scheduleoptimizer.schedule.TreeSchedule;
+import se306group8.scheduleoptimizer.schedule.TreeScheduleBuilder;
+import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
+import se306group8.scheduleoptimizer.taskgraph.Task;
 
 /**
- * Simple implementation of ChildScheduleFinder, this implementation does not do anything
- * smart to reduce the number of equivalent schedules.
+ * Simple implementation of ChildScheduleFinder, this implementation does not do
+ * anything smart to reduce the number of equivalent schedules.
  */
-public class BasicChildScheduleFinder implements ChildScheduleFinder {
-	
-	private final int _processors;
-	
-	public BasicChildScheduleFinder(int processors) {
-		_processors = processors;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<TreeSchedule> getChildSchedules(TreeSchedule schedule) {
-		
-		TaskGraphOld graph = schedule.getGraph();
+public class BasicChildScheduleFinder<T extends TreeSchedule> implements ChildScheduleFinder<T> {
 
-		Collection<TaskOld> nextTasks = schedule.getAllocatable();
-		
-		// Get an array of integers that represents processor numbers
-		int[] processors = IntStream.rangeClosed(1, _processors).toArray();
-		
-		List<TreeSchedule> childSchedules = new ArrayList<TreeSchedule>();
-		
-		for (TaskOld task : nextTasks) {
-			for (int processor : processors) {
-				childSchedules.add(new TreeSchedule(task, processor, schedule));
+	private TreeScheduleBuilder<T> builder;
+
+	public BasicChildScheduleFinder(TreeScheduleBuilder<T> builder) {
+		this.builder = builder;
+	}
+
+	@Override
+	public List<T> getChildSchedules(T parent) {
+		ProblemStatement pS = parent.getProblemStatement();
+		int numProcessors = pS.getNumProcessors();
+		Collection<Task> allocatable = parent.getAllocatableTasks();
+		List<T> children = new ArrayList<T>();
+		for (Task task : allocatable) {
+			for (int p = 1; p <= numProcessors; p++) {
+				children.add(builder.buildChildSchedule(parent, task, p));
 			}
 		}
-		return childSchedules;
+		return children;
 	}
 }

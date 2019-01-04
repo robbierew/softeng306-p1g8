@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
-import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinderOld;
 import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;

@@ -16,6 +16,8 @@ public interface Schedule {
 	
 	public TaskAllocation getLastAllocationForProcessor(int processor) ;
 	
+	public TaskAllocation getFirstAllocationForProcessor(int processor) ;
+	
 	public int getRuntime();
 	
 	default public boolean isComplete() {
@@ -42,4 +44,5 @@ public interface Schedule {
 	default public List<Task> getTaskListFromMask(int mask){
 		return getProblemStatement().getTaskListFromMask(mask);
 	}
+	
 }

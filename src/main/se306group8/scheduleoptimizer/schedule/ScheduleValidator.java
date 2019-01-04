@@ -19,6 +19,8 @@ public abstract class ScheduleValidator implements Schedule {
 	protected abstract TaskAllocation getAllocationForTaskImpl(Task task);
 
 	protected abstract TaskAllocation getLastAllocationForProcessorImpl(int processor);
+	
+	protected abstract TaskAllocation getFirstAllocationForProcessorImpl(int processor);
 
 	@Override
 	public TaskAllocation getAllocationForTask(Task task) {
@@ -43,6 +45,12 @@ public abstract class ScheduleValidator implements Schedule {
 	public TaskAllocation getLastAllocationForProcessor(int processor) {
 		validateProcessorNum(processor);
 		return getLastAllocationForProcessorImpl(processor);
+	}
+	
+	@Override
+	public TaskAllocation getFirstAllocationForProcessor(int processor) {
+		validateProcessorNum(processor);
+		return getFirstAllocationForProcessorImpl(processor);
 	}
 
 	protected void checkAllocationValid(Schedule schedule, Task task, int processor) {

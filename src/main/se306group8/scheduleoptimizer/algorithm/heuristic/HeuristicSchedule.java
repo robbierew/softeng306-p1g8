@@ -20,7 +20,7 @@ public class HeuristicSchedule extends TreeSchedule {
 
 	public HeuristicSchedule(HeuristicSchedule parent, Task nextTask, int processor) {
 		super(parent, nextTask, processor);
-		applyHeuristic(parent.getHeuristicAlgorithm());
+		applyHeuristic(parent.getHeuristicAlgorithm(), parent.getHeuristic().getMetadata());
 		this.parent = parent;
 	}
 
@@ -58,5 +58,10 @@ public class HeuristicSchedule extends TreeSchedule {
 	private void applyHeuristic(HeuristicAlgorithm algorithm) {
 		this.algorithm = algorithm;
 		heuristic = algorithm.computeHeuristic(this);
+	}
+	
+	private void applyHeuristic(HeuristicAlgorithm algorithm, Object metadata) {
+		this.algorithm = algorithm;
+		heuristic = algorithm.computeHeuristic(this,metadata);
 	}
 }

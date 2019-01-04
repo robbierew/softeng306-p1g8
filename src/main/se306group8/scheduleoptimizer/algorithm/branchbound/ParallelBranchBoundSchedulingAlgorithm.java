@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinderOld;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
@@ -30,7 +30,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	private AtomicReference<TreeSchedule> bestSoFar;
 	private AtomicLong explored;
 	
-	private final ChildScheduleFinder finder;
+	private final ChildScheduleFinderOld finder;
 	private final MinimumHeuristic heuristic;
 	
 	/**
@@ -132,7 +132,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		
 	}
 	
-	public ParallelBranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic,RuntimeMonitor monitor, int parallelism) {
+	public ParallelBranchBoundSchedulingAlgorithm(ChildScheduleFinderOld finder, MinimumHeuristic heuristic,RuntimeMonitor monitor, int parallelism) {
 		super(monitor);
 		this.parallelism=parallelism;
 		this.finder = finder;

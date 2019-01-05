@@ -5,7 +5,7 @@ import se306group8.scheduleoptimizer.algorithm.branchbound.BranchBoundScheduling
 import se306group8.scheduleoptimizer.algorithm.branchbound.ParallelBranchBoundSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
-import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristicOld;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
 import se306group8.scheduleoptimizer.config.Config;
@@ -20,12 +20,12 @@ public class AlgorithmFactory {
 
 			private final CriticalPathHeuristic criticalPathHeuristic;
 			private final NoIdleTimeHeuristic noIdleTimeHeuristic;
-			private final DataReadyTimeHeuristic dataReadyTimeHeuristic;
+			private final DataReadyTimeHeuristicOld dataReadyTimeHeuristic;
 
 			{
 				criticalPathHeuristic = new CriticalPathHeuristic();
 				noIdleTimeHeuristic = new NoIdleTimeHeuristic(config.processorsToScheduleOn());
-				dataReadyTimeHeuristic = new DataReadyTimeHeuristic(config.processorsToScheduleOn());
+				dataReadyTimeHeuristic = new DataReadyTimeHeuristicOld(config.processorsToScheduleOn());
 			}
 
 			@Override

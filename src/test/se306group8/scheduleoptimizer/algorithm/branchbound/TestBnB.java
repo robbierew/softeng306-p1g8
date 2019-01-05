@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.BottomLevelHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.HeuristicAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.heuristic.HeuristicSchedule;
@@ -27,6 +29,7 @@ import se306group8.scheduleoptimizer.schedule.Schedule;
 import se306group8.scheduleoptimizer.schedule.TreeScheduleBuilder;
 import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
@@ -37,7 +40,10 @@ public class TestBnB {
 	@BeforeEach
 	public void prepBnB() {
 		HeuristicAlgorithm hAlgotithm = new IdleTimeHeuristic();
-		TreeScheduleBuilder<HeuristicSchedule> builder = new HeuristicScheduleBuilder(hAlgotithm);
+		HeuristicAlgorithm bAlgorithm = new BottomLevelHeuristic();
+		
+		HeuristicAlgorithm aAlgorithm = new AggregateHeuristic(hAlgotithm,bAlgorithm);
+		TreeScheduleBuilder<HeuristicSchedule> builder = new HeuristicScheduleBuilder(aAlgorithm);
 		bnb = new BnBSchedulingAlgorithm<HeuristicSchedule>(builder);
 	}
 	
@@ -79,16 +85,39 @@ public class TestBnB {
 
 			int processors = optimal.getNumberOfUsedProcessors();
 			
-			if (processors > 2) {
+			if (processors > 3) {
 				continue;
 			}
-			
+			prepBnB();
 			Schedule s = bnb.findOptimalSchedule(new ProblemStatement(graph,processors));
 
 			System.out.println(" took " + (System.nanoTime() - start) / 1_000_000 + "ms");
 
-			Assertions.assertEquals(optimal.getTotalRuntime(), s.getRuntime());
+			Assertions.assertEquals(optimal.getTotalRuntime(), s.getRuntime(),graphName);
 		}
 	}
+	
+	@Test
+	void regressionGraph() throws IOException {
+		
+		String graphName = "4p_Random_Nodes_10_Density_0.50_CCR_0.10_WeightType_Random.dot";
+		DOTFileHandler reader = new DOTFileHandler();
+		DOTFileHandlerOld oldReader = new DOTFileHandlerOld();
+		
+		long start = System.nanoTime();
+		se306group8.scheduleoptimizer.taskgraph.Schedule optimal = oldReader.readSchedule(Paths.get("dataset", "output", graphName));
 
+		System.out.println("Starting '" + graphName + "'");
+
+		TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+
+		int processors = optimal.getNumberOfUsedProcessors();
+		
+		
+		Schedule s = bnb.findOptimalSchedule(new ProblemStatement(graph,processors));
+
+		System.out.println(" took " + (System.nanoTime() - start) / 1_000_000 + "ms");
+
+		Assertions.assertEquals(optimal.getTotalRuntime(), s.getRuntime());
+	}
 }

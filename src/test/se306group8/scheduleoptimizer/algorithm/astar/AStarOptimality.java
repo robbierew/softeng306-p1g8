@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinderOld;
 import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
-import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristicOld;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
-import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristicOld;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
 import se306group8.scheduleoptimizer.dotfile.DOTFileHandlerOld;
@@ -29,8 +29,8 @@ public class AStarOptimality {
 	
 	
 	private Algorithm initAlgorithm(int numProcessors) {
-		MinimumHeuristic heuristic = new AggregateHeuristic(new CriticalPathHeuristic(),
-				new DataReadyTimeHeuristic(numProcessors), new NoIdleTimeHeuristic(numProcessors));
+		MinimumHeuristic heuristic = new AggregateHeuristicOld(new CriticalPathHeuristic(),
+				new DataReadyTimeHeuristicOld(numProcessors), new NoIdleTimeHeuristic(numProcessors));
 		return new AStarSchedulingAlgorithm(new DuplicateRemovingChildFinder(numProcessors), heuristic);
 	}
 	

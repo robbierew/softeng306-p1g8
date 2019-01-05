@@ -72,6 +72,6 @@ public class MinimumHeuristicTest {
 	
 	@Test
 	public void testDataReadyTime() {
-		testEstimate(new DataReadyTimeHeuristic(PROCESSOR));
+		testEstimate(new DataReadyTimeHeuristicOld(PROCESSOR));
 	}
 }

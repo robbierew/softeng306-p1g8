@@ -35,9 +35,9 @@ import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFin
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinderOld;
 import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
-import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristicOld;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
-import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristicOld;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
 import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
@@ -74,7 +74,7 @@ public class PerformanceTest {
 		HEURISTICS.put("ZERO", processors -> schedule -> 0);
 		HEURISTICS.put("NO_IDLE", NoIdleTimeHeuristic::new);
 		HEURISTICS.put("CRITICAL_PATH", processors -> new CriticalPathHeuristic());
-		HEURISTICS.put("DATA_READY_TIME", DataReadyTimeHeuristic::new);
+		HEURISTICS.put("DATA_READY_TIME", DataReadyTimeHeuristicOld::new);
 
 		CHILD_FINDER.put("BASIC", BasicChildScheduleFinderOld::new);
 		CHILD_FINDER.put("GREEDY", GreedyChildScheduleFinder::new);
@@ -119,7 +119,7 @@ public class PerformanceTest {
 		} else {
 			heuristicBuilder = processors -> {
 				MinimumHeuristic[] heuristics = heuristicBuilders.stream().map(builder -> builder.apply(processors)).toArray(MinimumHeuristic[]::new);
-				return new AggregateHeuristic(heuristics);
+				return new AggregateHeuristicOld(heuristics);
 			};
 		}
 

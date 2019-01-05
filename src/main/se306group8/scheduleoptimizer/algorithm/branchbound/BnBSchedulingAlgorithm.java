@@ -16,7 +16,7 @@ public class BnBSchedulingAlgorithm<T extends HeuristicSchedule> {
 	}
 	
 	public T findOptimalSchedule(T schedule) {
-		this.finder = new OptimalSearchChildFinder<T>(builder);
+		this.finder = new OptimalSearchChildFinder<T>(schedule.getProblemStatement(),builder);
 		return search(schedule);
 	}
 	

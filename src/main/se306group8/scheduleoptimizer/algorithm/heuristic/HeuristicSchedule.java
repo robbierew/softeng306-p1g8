@@ -7,33 +7,43 @@ import se306group8.scheduleoptimizer.taskgraph.Task;
 
 public class HeuristicSchedule extends TreeSchedule {
 
-	Heuristic heuristic = null;
+	
 	HeuristicAlgorithm algorithm;
+	Object metadata = null;
 
 	// Lazy loaded
 	HeuristicSchedule parent;
+	Heuristic heuristic = null;
 
 	public HeuristicSchedule(ProblemStatement statement, HeuristicAlgorithm algorithm) {
 		super(statement);
-		applyHeuristic(algorithm);
+		this.algorithm = algorithm;
 	}
 
 	public HeuristicSchedule(HeuristicSchedule parent, Task nextTask, int processor) {
 		super(parent, nextTask, processor);
-		applyHeuristic(parent.getHeuristicAlgorithm(), parent.getHeuristic().getMetadata());
+		this.metadata =  parent.getHeuristic().getMetadata();
 		this.parent = parent;
+		this.algorithm = parent.getHeuristicAlgorithm();
 	}
 
 	public HeuristicSchedule(AllocationHistory history, HeuristicAlgorithm algorithm) {
 		super(history);
-		applyHeuristic(algorithm);
+		this.algorithm = algorithm;
 	}
 
 	public int getHeuristicValue() {
-		return heuristic.getHeuristicValue();
+		return getHeuristic().getHeuristicValue();
 	}
 
 	public Heuristic getHeuristic() {
+		if (heuristic == null) {
+			if (metadata == null) {
+				applyHeuristic(algorithm);
+			}else {
+				applyHeuristic(algorithm,metadata);
+			}
+		}
 		return heuristic;
 	}
 

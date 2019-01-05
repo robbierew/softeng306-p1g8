@@ -1,4 +1,4 @@
-package se306group8.scheduleoptimizer.algorithm.childfinder;
+package se306group8.scheduleoptimizer.algorithm.pruner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +12,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 //Based on Oliver's paper he defines whats called Identical tasks,
 //we use this concept to add an ordering on what tasks get added. 
-public class IdenticalTaskOrderingPruner<T extends TreeSchedule> {
+public class IdenticalTaskOrderingPruner<T extends TreeSchedule> implements Pruner<T> {
 
 	
 	//be sure testing is done to make sure duplicate removing is compatible with this
@@ -20,6 +20,7 @@ public class IdenticalTaskOrderingPruner<T extends TreeSchedule> {
 	
 	private int[] requiredAllocationMask;
 	private TaskGraph graph;
+	private boolean hasOrdering;
 	
 	private class IdenticalTaskOrderer implements Comparator<Task>{
 
@@ -89,16 +90,26 @@ public class IdenticalTaskOrderingPruner<T extends TreeSchedule> {
 		requiredAllocationMask = new int[graph.getNumTasks()];
 		IdenticalTaskOrderer order = new IdenticalTaskOrderer();
 		Collections.sort(tasks, order);
+		
+		
+		hasOrdering = false;
+		
 		for (int i=0;i<graph.getNumTasks()-1;i++) {
 			
 			//they are the "identical tasks" 
 			if (order.equals(tasks.get(i),tasks.get(i+1)) == 0) {
 				requiredAllocationMask[i+1] = tasks.get(i).getMask();
+				hasOrdering = true;
 			}
 		}
 	}
 	
 	public List<T> prune(List<T> schedules){
+		
+		if (!hasOrdering) {
+			return schedules;
+		}
+		
 		List<T> keptSchedules = new ArrayList<T>();
 		for (T s:schedules) {
 			Task lastTask = s.getLastAllocatedTask();

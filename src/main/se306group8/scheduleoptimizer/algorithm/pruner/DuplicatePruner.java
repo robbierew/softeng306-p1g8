@@ -1,4 +1,4 @@
-package se306group8.scheduleoptimizer.algorithm.childfinder;
+package se306group8.scheduleoptimizer.algorithm.pruner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import se306group8.scheduleoptimizer.schedule.TreeSchedule;
 import se306group8.scheduleoptimizer.schedule.taskallocation.TaskAllocation;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
-public class DuplicatePruner<T extends TreeSchedule> {
+public class DuplicatePruner<T extends TreeSchedule> implements Pruner<T> {
 	
 	private  Comparator<TaskAllocation> sorter = new IdSorter();
 	

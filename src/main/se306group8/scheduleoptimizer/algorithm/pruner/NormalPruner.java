@@ -1,4 +1,4 @@
-package se306group8.scheduleoptimizer.algorithm.childfinder;
+package se306group8.scheduleoptimizer.algorithm.pruner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,8 @@ import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
 
 //this class discards children that are not normalized
 //Normalized means that the first tasks on each processor goes in increasing ID
-public class NormalPruner<T extends Schedule> {
-	public List<T> keepNormalSchedules(List<T> schedules) {
+public class NormalPruner<T extends Schedule> implements Pruner<T>{
+	public List<T> prune(List<T> schedules) {
 		List<T> keptSchedules = new ArrayList<T>();
 		for (T s : schedules) {
 			ProblemStatement pS = s.getProblemStatement();

@@ -44,7 +44,8 @@ public class IdleTimeHeuristic implements HeuristicAlgorithm{
 	}
 
 	@Override
-	public Heuristic computeHeuristic(HeuristicSchedule schedule, Object metadata) {
+	public Heuristic computeHeuristic(HeuristicSchedule schedule, Heuristic parentHeuistic) {
+		Object metadata = parentHeuistic.getMetadata();
 		if (metadata instanceof IdleTimeMetaData) {
 			IdleTimeMetaData mData = (IdleTimeMetaData)metadata;
 			IdleTimeMetaData mDataNew = new IdleTimeMetaData();

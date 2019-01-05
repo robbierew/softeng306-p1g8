@@ -17,6 +17,13 @@ class TaskGraphImpl implements TaskGraph {
 		tasks = Collections.unmodifiableList(ordered);
 		costMatrix = remoteCostMatrix;
 		roots = Collections.unmodifiableList(computeRoots(tasks));
+		
+		
+		//iterate in reverse partial order this makes it easy to calc
+		//every child task will have their bottomlevel's calculated first
+		for (int taskNum = this.getNumTasks() -1;taskNum >= 0;taskNum--) {
+			calcBottomTime((TaskImpl)tasks.get(taskNum));
+		}
 	}
 
 	@Override
@@ -58,6 +65,16 @@ class TaskGraphImpl implements TaskGraph {
 	@Override
 	public int getRootMask() {
 		return rootMask;
+	}
+	
+	private void calcBottomTime(TaskImpl t) {
+		int highestChildBl = 0;
+		for (Task child:t.getChildTasks()) {
+			if (child.getBottomLevel() > highestChildBl) {
+				highestChildBl = child.getBottomLevel();
+			}
+		}
+		t.setBottomLevel(t.getComputeCost() + highestChildBl);
 	}
 
 }

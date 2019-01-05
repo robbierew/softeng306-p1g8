@@ -9,7 +9,7 @@ public class HeuristicSchedule extends TreeSchedule {
 
 	
 	HeuristicAlgorithm algorithm;
-	Object metadata = null;
+	Heuristic parentHeuristic = null;
 
 	// Lazy loaded
 	HeuristicSchedule parent;
@@ -22,7 +22,7 @@ public class HeuristicSchedule extends TreeSchedule {
 
 	public HeuristicSchedule(HeuristicSchedule parent, Task nextTask, int processor) {
 		super(parent, nextTask, processor);
-		this.metadata =  parent.getHeuristic().getMetadata();
+		this.parentHeuristic =  parent.getHeuristic();
 		this.parent = parent;
 		this.algorithm = parent.getHeuristicAlgorithm();
 	}
@@ -38,10 +38,10 @@ public class HeuristicSchedule extends TreeSchedule {
 
 	public Heuristic getHeuristic() {
 		if (heuristic == null) {
-			if (metadata == null) {
+			if (parentHeuristic == null) {
 				applyHeuristic(algorithm);
 			}else {
-				applyHeuristic(algorithm,metadata);
+				applyHeuristic(algorithm,parentHeuristic);
 			}
 		}
 		return heuristic;
@@ -66,12 +66,10 @@ public class HeuristicSchedule extends TreeSchedule {
 	}
 
 	private void applyHeuristic(HeuristicAlgorithm algorithm) {
-		this.algorithm = algorithm;
 		heuristic = algorithm.computeHeuristic(this);
 	}
 	
-	private void applyHeuristic(HeuristicAlgorithm algorithm, Object metadata) {
-		this.algorithm = algorithm;
-		heuristic = algorithm.computeHeuristic(this,metadata);
+	private void applyHeuristic(HeuristicAlgorithm algorithm, Heuristic parentHeuristic) {
+		heuristic = algorithm.computeHeuristic(this,parentHeuristic);
 	}
 }

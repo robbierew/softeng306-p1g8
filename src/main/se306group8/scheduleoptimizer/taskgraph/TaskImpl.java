@@ -13,6 +13,7 @@ class TaskImpl implements Task {
 	private int mask;
 	private int parentTaskMask;
 	private int childTaskMask;
+	private int bottomLevel;
 	private List<Task> parents;
 	private List<Task> children;
 	private TaskGraph taskGraph;
@@ -53,6 +54,11 @@ class TaskImpl implements Task {
 	}
 
 	@Override
+	public int getBottomLevel() {
+		return bottomLevel;
+	}
+	
+	@Override
 	public List<Task> getParentTasks() {
 		return Collections.unmodifiableList(parents);
 	}
@@ -84,6 +90,10 @@ class TaskImpl implements Task {
 		mask = 1 << id;
 	}
 
+	void setBottomLevel(int bl) {
+		bottomLevel = bl;
+	}
+	
 	void computeRelationMasks() {
 		// compute the parent mask
 		parentTaskMask = 0;

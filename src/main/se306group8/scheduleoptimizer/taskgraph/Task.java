@@ -15,6 +15,8 @@ public interface Task {
 	public int getParentTaskMask();
 
 	public int getChildTaskMask();
+	
+	public int getBottomLevel();
 
 	// Not sure if there is any reason this is a list over a Collection we will see
 	public List<Task> getParentTasks();

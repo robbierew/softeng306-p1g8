@@ -6,7 +6,7 @@ public class AggregateHeuristic implements HeuristicAlgorithm{
 	private HeuristicAlgorithm[] algorithms;
 	
 	private class AggregateMetaData{
-		Object[] metadatas;
+		Heuristic[] metadatas;
 	}
 	
 	public AggregateHeuristic(HeuristicAlgorithm ... algorithms) {
@@ -16,13 +16,13 @@ public class AggregateHeuristic implements HeuristicAlgorithm{
 	@Override
 	public Heuristic computeHeuristic(HeuristicSchedule schedule) {
 		AggregateMetaData mData = new AggregateMetaData();
-		mData.metadatas = new Object[algorithms.length];
+		mData.metadatas = new Heuristic[algorithms.length];
 		int highestHeuristic = 0;
 		int index = 0;
 		for (HeuristicAlgorithm algorithm:algorithms) {
 			Heuristic h = algorithm.computeHeuristic(schedule);
 			highestHeuristic = Math.max(highestHeuristic, h.getHeuristicValue());
-			mData.metadatas[index] = h.getMetadata();
+			mData.metadatas[index] = h;
 			index++;
 		}
 		
@@ -30,19 +30,19 @@ public class AggregateHeuristic implements HeuristicAlgorithm{
 	}
 
 	@Override
-	public Heuristic computeHeuristic(HeuristicSchedule schedule, Object metadata) {
-		
+	public Heuristic computeHeuristic(HeuristicSchedule schedule, Heuristic parentHeuristic) {
+		Object metadata = parentHeuristic.getMetadata();
 		if (metadata instanceof AggregateMetaData) {
 			AggregateMetaData mData = (AggregateMetaData)metadata;
 			AggregateMetaData mDataNew = new AggregateMetaData();
-			mDataNew.metadatas = new Object[algorithms.length];
+			mDataNew.metadatas = new Heuristic[algorithms.length];
 			int highestHeuristic = 0;
 			int index = 0;
 			
 			for (HeuristicAlgorithm algorithm:algorithms) {
 				Heuristic h = algorithm.computeHeuristic(schedule,mData.metadatas[index]);
 				highestHeuristic = Math.max(highestHeuristic, h.getHeuristicValue());
-				mDataNew.metadatas[index] = h.getMetadata();
+				mDataNew.metadatas[index] = h;
 				index++;
 			}
 			

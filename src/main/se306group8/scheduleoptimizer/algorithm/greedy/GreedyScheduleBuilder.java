@@ -9,7 +9,7 @@ import se306group8.scheduleoptimizer.taskgraph.Task;
 
 public class GreedyScheduleBuilder<T extends TreeSchedule> {
 
-	TreeScheduleBuilder<T> builder;
+	private TreeScheduleBuilder<T> builder;
 
 	public GreedyScheduleBuilder(TreeScheduleBuilder<T> builder) {
 		this.builder = builder;

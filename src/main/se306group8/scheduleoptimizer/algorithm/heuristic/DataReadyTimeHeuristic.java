@@ -1,11 +1,13 @@
 package se306group8.scheduleoptimizer.algorithm.heuristic;
 
+import java.util.List;
+
 import se306group8.scheduleoptimizer.schedule.taskallocation.TaskAllocation;
+import se306group8.scheduleoptimizer.taskgraph.Task;
 
 public class DataReadyTimeHeuristic implements HeuristicAlgorithm{
 	
 	private class DataReadyTimeMetaData{
-		int[] bottomLevels;
 		int[] tdr;
 		
 	}
@@ -14,10 +16,8 @@ public class DataReadyTimeHeuristic implements HeuristicAlgorithm{
 	@Override
 	public Heuristic computeHeuristic(HeuristicSchedule schedule) {
 		DataReadyTimeMetaData mData = new DataReadyTimeMetaData();
-		mData.bottomLevels = BottomLevel.calcBottomLevel(schedule.getProblemStatement());
-		TaskAllocation[] allocations = schedule.getAllocationHistory().getAllocationsAsArray();
-		
-		
+		mData.tdr = new int[schedule.getProblemStatement().getNumTasks()];
+		List<Task> allocatable = schedule.getAllocatedTasks(); 
 		
 	}
 
@@ -25,6 +25,15 @@ public class DataReadyTimeHeuristic implements HeuristicAlgorithm{
 	public Heuristic computeHeuristic(HeuristicSchedule schedule, Object metadata) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private void updatetdr(List<Task> tasks, int[] tdr, int processors) {
+		for (Task t: tasks) {
+			int minDrt = Integer.MAX_VALUE;
+			for (int p=1;p<=processors;p++) {
+				minDrt = Math.min(minDrt, b)
+			}
+		}
 	}
 
 }

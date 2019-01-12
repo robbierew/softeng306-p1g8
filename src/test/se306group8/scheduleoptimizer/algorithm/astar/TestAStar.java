@@ -1,39 +1,96 @@
 package se306group8.scheduleoptimizer.algorithm.astar;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import se306group8.scheduleoptimizer.algorithm.Algorithm;
-import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
-import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinderOld;
-import se306group8.scheduleoptimizer.taskgraph.Schedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraphOld;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtilsOld;
+import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.BottomLevelHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.HeuristicAlgorithm;
+import se306group8.scheduleoptimizer.algorithm.heuristic.IdleTimeHeuristic;
+import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
+import se306group8.scheduleoptimizer.dotfile.DOTFileHandlerOld;
+import se306group8.scheduleoptimizer.schedule.Schedule;
+import se306group8.scheduleoptimizer.schedule.queue.QueueSchedule;
+import se306group8.scheduleoptimizer.schedule.queue.QueueScheduleBuilder;
+import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class TestAStar {
+	
+	QueueScheduleBuilder builder;
+	AStarSchedulingAlgorithm<QueueSchedule> aStar;
+	@BeforeEach
+	public void prepAStar() {
+		HeuristicAlgorithm iAlgotithm = new IdleTimeHeuristic();
+		HeuristicAlgorithm bAlgorithm = new BottomLevelHeuristic();
+		HeuristicAlgorithm dAlgorithm = new DataReadyTimeHeuristic();
+		HeuristicAlgorithm aAlgorithm = new AggregateHeuristic(iAlgotithm,bAlgorithm,dAlgorithm);
+		builder = new QueueScheduleBuilder(aAlgorithm);
+		aStar = new AStarSchedulingAlgorithm<QueueSchedule>(builder);
+	}
+	
+	
+	@Test
+	public void correctASchedule() {
+		TaskGraph a = TestGraphUtils.buildTestGraphA();
+		ProblemStatement statement = new ProblemStatement(a, 2);
+		Schedule s = aStar.findOptimalSchedule(statement);
 
-	private void testGraph(TaskGraphOld graph) throws InterruptedException {
-		// TODO improve these tests!
-		Algorithm algorithm = new AStarSchedulingAlgorithm(new BasicChildScheduleFinderOld(1), h -> 0);
-		Schedule s = algorithm.produceCompleteSchedule(graph, 1);
-		TestScheduleUtils.checkValidity(s,1);
+		assertTrue(s.isComplete());
+		assertEquals(8, s.getRuntime());
 	}
 	
 	@Test
-	public void testGraphA() throws InterruptedException {
-		TaskGraphOld tgA = TestGraphUtilsOld.buildTestGraphA();
-		testGraph(tgA);
+	void testProduceCompleteScheduleAll10NodeGraphs() throws IOException, InterruptedException {
+		List<String> names = new ArrayList<>();
+
+		try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("dataset", "input"))) {
+			stream.forEach(p -> {
+				String graphName = p.getFileName().toString();
+				if(graphName.contains("Nodes_10"))
+					names.add(graphName);
+
+			});
+		}
+
+		names.sort(null);
+
+		for(String graphName : names) {
+			DOTFileHandler reader = new DOTFileHandler();
+			DOTFileHandlerOld oldReader = new DOTFileHandlerOld();
+			
+			long start = System.nanoTime();
+			se306group8.scheduleoptimizer.taskgraph.Schedule optimal = oldReader.readSchedule(Paths.get("dataset", "output", graphName));
+
+			System.out.println("Starting '" + graphName + "'");
+
+			TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+
+			int processors = optimal.getNumberOfUsedProcessors();
+			
+			if (processors > 3) {
+				continue;
+			}
+			//prepBnB();
+			Schedule s = aStar.findOptimalSchedule(new ProblemStatement(graph,processors));
+
+			System.out.println(" took " + (System.nanoTime() - start) / 1_000_000 + "ms");
+
+			Assertions.assertEquals(optimal.getTotalRuntime(), s.getRuntime(),graphName);
+		}
 	}
-	
-	@Test
-	public void testGraphB() throws InterruptedException {
-		TaskGraphOld tgB = TestGraphUtilsOld.buildTestGraphB();
-		testGraph(tgB);
-	}
-	
-	@Test
-	public void testGraphC() throws InterruptedException {
-		TaskGraphOld tgC = TestGraphUtilsOld.buildTestGraphC();
-		testGraph(tgC);
-	}
-	
 }

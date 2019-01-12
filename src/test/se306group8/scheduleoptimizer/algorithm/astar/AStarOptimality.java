@@ -31,7 +31,7 @@ public class AStarOptimality {
 	private Algorithm initAlgorithm(int numProcessors) {
 		MinimumHeuristic heuristic = new AggregateHeuristicOld(new CriticalPathHeuristic(),
 				new DataReadyTimeHeuristicOld(numProcessors), new NoIdleTimeHeuristic(numProcessors));
-		return new AStarSchedulingAlgorithm(new DuplicateRemovingChildFinder(numProcessors), heuristic);
+		return new AStarSchedulingAlgorithmOld(new DuplicateRemovingChildFinder(numProcessors), heuristic);
 	}
 	
 	//@Test

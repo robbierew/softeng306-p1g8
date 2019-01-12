@@ -1,5 +1,7 @@
 package se306group8.scheduleoptimizer.schedule.queue;
 
+import java.util.List;
+
 import se306group8.scheduleoptimizer.schedule.TreeScheduleBuilder;
 import se306group8.scheduleoptimizer.taskgraph.ProblemStatement;
 
@@ -27,6 +29,12 @@ public class HeuristicPriorityQueue<T extends QueueSchedule> {
 	
 	public T peek() {
 		return store.getScheduleByStoreEntry(heap.peek());
+	}
+	
+	public void putAll(List<T> schedules) {
+		for (T schedule:schedules) {
+			put(schedule);
+		}
 	}
 	
 	public void put(T schedule) {

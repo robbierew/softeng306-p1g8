@@ -2,6 +2,7 @@ package se306group8.scheduleoptimizer.schedule.queue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -58,7 +59,10 @@ class DeltaScheduleStore<T extends QueueSchedule> {
 	//note this method removes blocks that are ABOVE the cutoff
 	public void removeAbove(int heuristic) {
 		Set<Entry<Integer,ArrayList<DeltaStoreBlock<T>>>> entrySet = heuristicBlockMap.entrySet();
-		for (Entry<Integer,ArrayList<DeltaStoreBlock<T>>> buckets: entrySet) {
+		Iterator<Entry<Integer, ArrayList<DeltaStoreBlock<T>>>> it = entrySet.iterator();
+		
+		while (it.hasNext()) {
+			Entry<Integer,ArrayList<DeltaStoreBlock<T>>> buckets = it.next();
 			if (buckets.getKey() > heuristic) {
 				ArrayList<DeltaStoreBlock<T>> blocks = buckets.getValue();
 				
@@ -70,9 +74,10 @@ class DeltaScheduleStore<T extends QueueSchedule> {
 				}
 				
 				//the entry set is backed my the map so removing from this set removes from the map
-				entrySet.remove(buckets);
+				it.remove();
 			}
 		}
+		
 	}
 	
 	//blocks can be destroyed when heuristics are reduced meaning block number can be reused

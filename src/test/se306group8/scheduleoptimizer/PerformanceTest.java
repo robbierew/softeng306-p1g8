@@ -28,7 +28,7 @@ import org.apache.commons.cli.ParseException;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.algorithm.astar.AStarSchedulingAlgorithm;
+import se306group8.scheduleoptimizer.algorithm.astar.AStarSchedulingAlgorithmOld;
 import se306group8.scheduleoptimizer.algorithm.branchbound.BranchBoundSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.branchbound.ParallelBranchBoundSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinderOld;
@@ -67,7 +67,7 @@ public class PerformanceTest {
 		DIFFICULTIES.put("MEDIUM", s -> !s.contains("Nodes_3") && !s.matches(".*(Fork_Join_Nodes_21|Fork_Nodes_21|Join_Nodes_21).*"));
 		DIFFICULTIES.put("HARD", s -> true);
 
-		ALGORITHMS.put("A_STAR", (h, f, m, s) -> new AStarSchedulingAlgorithm(f, h, m, s));
+		ALGORITHMS.put("A_STAR", (h, f, m, s) -> new AStarSchedulingAlgorithmOld(f, h, m, s));
 		ALGORITHMS.put("BRANCH_BOUND", (h, f, m, s) -> new BranchBoundSchedulingAlgorithm(f, h, m));
 		ALGORITHMS.put("PARALLEL_BRANCH_BOUND", (h, f, m, s) -> new ParallelBranchBoundSchedulingAlgorithm(f, h, m, 20));
 

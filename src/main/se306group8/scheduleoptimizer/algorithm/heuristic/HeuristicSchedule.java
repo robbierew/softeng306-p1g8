@@ -55,12 +55,8 @@ public class HeuristicSchedule extends TreeSchedule {
 	// This override makes the return value a HeuristicSchedule
 	public HeuristicSchedule getParent() {
 		if (parent == null && !isEmpty()) {
-			TreeSchedule superParent = super.getParent();
-			if (superParent instanceof HeuristicSchedule) {
-				parent = (HeuristicSchedule) superParent;
-			} else {
-				parent = new HeuristicSchedule(superParent.getAllocationHistory(), getHeuristicAlgorithm());
-			}
+			//TODO safe optimize with safe history
+			parent = new HeuristicSchedule(getAllocationHistory().previous(), getHeuristicAlgorithm());
 		}
 		return parent;
 	}

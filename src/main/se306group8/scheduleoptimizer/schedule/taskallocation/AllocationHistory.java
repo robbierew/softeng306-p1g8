@@ -132,6 +132,10 @@ public class AllocationHistory {
 	public ProblemStatement getStatement() {
 		return statement;
 	}
+	
+	public int getNumAllocations() {
+		return numAllocations;
+	}
 
 	// package private as this class should be immutable use builder class
 	// to access this method

@@ -19,6 +19,7 @@ import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFi
 import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.BottomLevelHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.HeuristicAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.heuristic.HeuristicSchedule;
 import se306group8.scheduleoptimizer.algorithm.heuristic.HeuristicScheduleBuilder;
@@ -39,10 +40,10 @@ public class TestBnB {
 	
 	@BeforeEach
 	public void prepBnB() {
-		HeuristicAlgorithm hAlgotithm = new IdleTimeHeuristic();
+		HeuristicAlgorithm iAlgotithm = new IdleTimeHeuristic();
 		HeuristicAlgorithm bAlgorithm = new BottomLevelHeuristic();
-		
-		HeuristicAlgorithm aAlgorithm = new AggregateHeuristic(hAlgotithm,bAlgorithm);
+		HeuristicAlgorithm dAlgorithm = new DataReadyTimeHeuristic();
+		HeuristicAlgorithm aAlgorithm = new AggregateHeuristic(iAlgotithm,bAlgorithm,dAlgorithm);
 		TreeScheduleBuilder<HeuristicSchedule> builder = new HeuristicScheduleBuilder(aAlgorithm);
 		bnb = new BnBSchedulingAlgorithm<HeuristicSchedule>(builder);
 	}
@@ -88,7 +89,7 @@ public class TestBnB {
 			if (processors > 3) {
 				continue;
 			}
-			prepBnB();
+			//prepBnB();
 			Schedule s = bnb.findOptimalSchedule(new ProblemStatement(graph,processors));
 
 			System.out.println(" took " + (System.nanoTime() - start) / 1_000_000 + "ms");

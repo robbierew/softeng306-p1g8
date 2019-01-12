@@ -105,7 +105,7 @@ public class TreeSchedule extends ScheduleValidator {
 	// if this returns null then you have root
 	public TreeSchedule getParent() {
 		if (parent == null && !isEmpty()) {
-			parent = new TreeSchedule(allocHistory.previous());
+			parent = new TreeSchedule(allocHistory.previous(), true);
 		}
 
 		return parent;
@@ -186,6 +186,11 @@ public class TreeSchedule extends ScheduleValidator {
 	protected TaskAllocation getFirstAllocationForProcessorImpl(int processor) {
 		return allocHistory.getFirstAllocationForProcessor(processor);
 	}
+	
+	@Override
+	public int getNumAllocatedTasks() {
+		return allocHistory.getNumAllocations();
+	}
 
 	private void updateMasksWithNextTask(Task nextTask) {
 		// remove the previous task from the list
@@ -199,6 +204,8 @@ public class TreeSchedule extends ScheduleValidator {
 			}
 		}
 	}
+
+	
 
 
 

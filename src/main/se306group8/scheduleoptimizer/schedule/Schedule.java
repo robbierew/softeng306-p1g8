@@ -40,6 +40,8 @@ public interface Schedule {
 	
 	public int getAllocatableMask();
 	
+	public int getNumAllocatedTasks();
+	
 	//for your convenience this method is also in schedule
 	default public List<Task> getTaskListFromMask(int mask){
 		return getProblemStatement().getTaskListFromMask(mask);
